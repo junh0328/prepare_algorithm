@@ -644,3 +644,582 @@ print(d[0:3])  # 인덱스 0 부터 인덱스 3 전까지 (2 까지)
 print(e[2][1:3])  # 2차원 배열의 인덱스 1부터 3전까지 (2까지)
 print(e[2][1:len(e[2])])  # 2차원 배열의 인덱스 1부터 e[2]의 길이 전까지 >>> len(e[2]) = 3
 ```
+
+## 2021.10.15, day 04
+
+### 리스트 연산
+
+```py
+print(c + d)
+print(c*3)
+# print(c[0] + 'hi') error, number + string의 식은 자동 형변환이 불가능하다
+print(str(c[0]) + 'hi')
+```
+
+### 리스트 수정, 삭제
+
+```py
+c[0] = 77
+print(c)
+
+# 슬라이싱 후 대입 기존 리스트의 구간보다 대입하는 구간의 길이가 길다면 리스트의 길이가 늘어난다 (삽입으로 인해)
+c[1:2] = [100, 1000, 10000]
+print(c)  # [77, 100, 1000, 10000, 3, 4]
+
+
+c[1] = ['a', 'b', 'c']
+print(c)  # [77, ['a', 'b', 'c'], 1000, 10000, 3, 4]
+
+del c[1]
+print(c)  # [77, 1000, 10000, 3, 4]
+
+del c[-1]
+print(c)  # [77, 1000, 10000, 3]
+```
+
+### 리스트 함수
+
+```py
+y = [5, 2, 3, 1, 4]
+print(y)
+
+y.append(6)  # push와 같음, 배열의 끝 부분에 해당 요소를 추가한다
+print(y)  # [5, 2, 3, 1, 4, 6]
+
+y.sort()  # 오름차 순으로 배열을 정리한다
+print(y)  # [1,2,3,4,5,6]
+
+y.reverse()  # 배열을 뒤집어서 반환한다
+print(y)  # [6,5,4,3,2,1]
+
+y.insert(2, 7)  # 배열에 인덱스 n 뒤에 m 요소를 삽입한다. (n, m) 인덱스 n 자리에 m 요소를 삽입한다
+print(y)  # [6, 5, 7, 4, 3, 2, 1]
+
+y.remove(2)  # 배열에서 요소 m 이 있다면 해당 요소를 삭제한다
+print(y)  # [6, 5, 7, 4, 3, 1]
+
+y.pop()  # 배열의 맨 마지막 요소를 제거한다
+print(y)  # [6, 5, 7, 4, 3]
+
+ex = [88, 77]
+y.extend(ex)  # 배열의 맨 마지막에 해당 변수를 넣어 확장한다
+print(y)  # [6, 5, 7, 4, 3, 88, 77]
+
+# 추가(삽입) : append, insert, extend
+# 삭제 : del, remove, pop
+```
+
+### 튜플 특징
+
+- 순서 o
+- 중복 o
+- 수정 x
+- 삭제 x
+
+### 튜플 선언
+
+튜플 선언 (리스트와 달리 소괄호로 선언한다)
+
+```py
+a = ()
+b = (1,)
+c = (1, 2, 3, 4)
+d = (10, 100, ('a', 'b', 'c'))
+```
+
+### 튜플 참조 (인덱싱)
+
+```py
+# 튜플 참조 리스트와 같이 [ ] 대괄호를 사용하여 참조한다
+
+print(c[2])
+print(c[3])
+print(d[2][2])
+
+# del c[2]: 'tuple' object doesn't support item deletion >> 튜플은 수정과 삭제가 되지 않는다
+```
+
+### 튜플 슬라이싱
+
+```py
+print(d[2:])
+print(d[2][0:2])
+
+# 삽입이 가능하나, 수정, 삭제가 불가능하므로 신중히 진행해야 한다
+print(c+d)
+print(c*3)
+```
+
+### 튜플 함수
+
+```py
+z = (5, 2, 1, 3, 4, 1)
+
+print(z)
+print(3 in z)
+print(6 not in z)
+print(z.index(3))  # 튜플에서 해당 요소가 위치하고 있는 인덱스를 반환합니다
+print(z.count(1))  # 튜플에서 해당 요소의 개수를 반환합니다
+```
+
+### 파이썬 자료구조(Dictonary, Set)
+
+- 딕셔너리 특징
+- 딕셔너리 추가
+- 집합 특징
+- 집합 자료형 함수
+- 자료형 변환
+
+### 딕셔너리 (Dictonary)
+
+### 딕셔너리 특징
+
+- 순서 x
+- 중복 x
+- 수정 o
+- 삭제 o
+
+딕셔너리는 Key, Value (Json) 로 이루어진 형식이다
+
+#### 딕셔너리 선언
+
+```py
+a = {
+    'name': 'junhee',
+    'phone': '010-7777-7777',
+    'birth': 970328
+}
+
+b = {
+    0: 'Hello Python',
+    1: 'Hello Coding'
+}
+
+c = {
+    'arr': [1, 2, 3, 4, 5],
+    'tuple': (1, 2, 3, 4, 5)
+}
+
+print(type(a))  # >>> <class 'dict'>
+```
+
+### 딕셔너리 출력
+
+```py
+# 직접 접근하기
+print(a['name'])
+
+# get을 통해 접근하기
+# 있을 경우 직접 접근과 동일하게 출력
+print(a.get('name'))
+
+# 없을 경우에는 Error 대신 None 출력 >>> 따라서 안전하게 조회할 수 있다 (에러 핸들링이 가능하다)
+print(a.get('address'))
+
+print(c['arr'][1:3])  # [2, 3]
+```
+
+### 딕셔너리 추가
+
+```py
+
+# 딕셔너리 추가
+a['address'] = 'Seoul'
+print(a)
+# {'name': 'junhee', 'phone': '010-7777-7777', 'birth': 970328, 'address': 'Seoul'}
+
+
+a['rank'] = [1, 3, 4]
+a['rank2'] = (1, 2, 3, 4)
+
+print(a)
+# {'name': 'junhee', 'phone': '010-7777-7777', 'birth': 970328, 'address': 'Seoul', 'rank': [1, 3, 4], 'rank2': (1, 2, 3, 4)}
+
+print()
+
+# keys, values, items
+
+# key
+
+# 딕셔너리 a의 key 값만 가져오고 싶을 때
+print(a.keys())
+# >>> dict_keys(['name', 'phone', 'birth', 'address', 'rank', 'rank2'])
+
+# 배열의 형태가 아니기 때문에 인덱싱으로 접근할 수 없다
+# print(a.keys()[0])  # Error: 'dict_keys' object is not subscriptable
+
+# 따라서 배열로 형변환을 한다면 그 후에 접근이 가능해진다
+print(list(a.keys())[0])
+print(list(a.keys()))
+
+print()
+
+# value
+
+print(a.values())
+print(list(a.values()))
+print(list(a.values())[:len(list(a.values()))])
+
+print()
+
+# item
+
+# 배열안에 각 key, value 의 쌍으로 이루어진 튜플이 들어있는 형식으로 반환된다
+
+print(a.items())
+print(list(a.items()))
+
+# [
+#     ('name', 'junhee'),
+#     ('phone', '010-7777-7777'),
+#     ('birth', 970328),
+#     ('address', 'Seoul'),
+#     ('rank', [1, 3, 4]),
+#     ('rank2', (1, 2, 3, 4))
+# ]
+```
+
+### 집합 특징
+
+- 순서 x
+- 중복 x
+- 추가 o
+- 제거 o
+
+### 집합 선언
+
+```py
+# 집합 선언
+
+a = set()
+b = set([1, 2, 3, 4])
+c = set([1, 4, 5, 6, 6])
+
+print(type(a)) # >>> <class 'set'>
+print(c)  # 중복을 허용하지 않기 때문에 알아서 제거되어 나옵니다  {1, 4, 5, 6}
+
+# 중복을 제거한 상태에서 집합 또는 튜플로 변환하여 주로 사용한다
+
+t = tuple(b)
+print(t)
+l = list(b)
+print(l)
+```
+
+### 집합 자료형 함수
+
+```py
+s1 = set([1, 2, 3, 4, 5, 6])
+s2 = set([4, 5, 6, 7, 8, 9])
+
+# 교집합
+
+print(s1.intersection(s2))
+print(s1 & s2)
+
+# {4, 5, 6}
+
+print()
+
+# 합집합
+
+print(s1.union(s2))
+print(s1 | s2)
+
+# {1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+print()
+
+# 차집합
+
+print(s1.difference(s2))
+print(s1 - s2)
+
+# {1, 2, 3}
+
+print()
+
+# 집합(Sets) 추가 & 제거
+
+s3 = set([7, 8, 10, 15])
+
+print(s3)
+
+# 추가
+
+s3.add(18)
+print(s3)
+
+# 제거
+
+s3.remove(15)
+print(s3)
+
+print(type(s3))
+
+# >>> <class 'set'>
+```
+
+### 퀴즈 개인 답안
+
+```py
+# Section04-5
+
+# 1. 아래 문자열의 길이를 구해보세요.
+q1 = "dk2jd923i1jdk2jd93jfd92jd918943jfd8923"
+
+print("1:", len(q1))
+
+# 2. print 함수를 사용해서 아래와 같이 출력해보세요.
+#    apple;orange;banana;lemon
+
+print("2:", 'apple;orange;banana;lemon')
+
+# 3. 화면에 * 기호 100개를 표시하세요.
+
+print("3:", '*' * 100)
+
+# 4. 문자열 "30" 을 각각 정수형, 실수형, 복소수형, 문자형으로 변환해보세요.
+
+q4 = '30'
+int_q4 = int(q4)
+float_q4 = float(q4)
+complex_q4 = complex(q4)
+
+print(type(int(int_q4)), int_q4)
+print(type(float(float_q4)), float_q4)
+print(type(complex(complex_q4)), complex_q4)
+print(type(q4), q4)
+
+# 5. 다음 문자열 "Niceman" 에서 "man" 문자열만 추출해보세요.
+
+q5 = 'Niceman'
+
+print(q5[4:len(q5)])
+print("5:", q5.replace('Nice', ''))
+
+# 6. 다음 문자열을 거꾸로 출력해보세요. : "Strawberry"
+
+sb = 'Strawberry'
+list_sb = list(sb)
+list_sb.reverse()
+# print(list_sb)
+print("6:", ''.join(list_sb))
+
+# 7. 다음 문자열에서 '-'를 제거 후 출력하세요. : "010-7777-9999"
+
+phone = "010-7777-9999"
+answer = []
+
+for i in range(0, len(phone)):
+    if(phone[i] != '-'):
+        answer.append(phone[i])
+
+print("7:", ''.join(answer))
+
+
+# 8. 다음 문자열(URL)에서 "http://" 부분을 제거 후 출력하세요. : "http://daum.net"
+
+url = "http://daum.net"
+
+print('8:', url.replace('http://', ''))
+
+
+# 9. 다음 문자열을 모두 대문자, 소문자로 각각 출력해보세요. : "NiceMan"
+
+m = "NicemMan"
+answer = []
+
+for i in range(0, len(m)):
+    if(m[i].islower()):
+        answer.append(m[i].upper())
+    else:
+        answer.append(m[i].lower())
+
+print("9:", ''.join(answer))
+
+# 10. 다음 문자열을 슬라이싱을 이용해서 "cde"만 출력하세요. : "abcdefghijklmn"
+
+print("10:", 'abcdefghijklmn'[2:5])
+
+
+# 11. 다음 리스트에서 "Apple" 항목만 삭제하세요. : ["Banana", "Apple", "Orange"]
+
+Arrlist = ["Banana", "Apple", "Orange"]
+
+del Arrlist[1]
+
+print("11:", Arrlist)
+
+
+# 12. 다음 튜플을 리스트로 변환하세요. : (1,2,3,4)
+
+t = (1, 2, 3, 4)
+print("12:", list(t))
+
+
+# 13. 다음 항목을 딕셔너리(dict)으로 선언해보세요. : <성인 - 100000 , 청소년 - 70000 , 아동 - 30000>
+
+dictObj = {
+    "성인": -100000,
+    "청소년": -70000,
+    "아동": -30000
+}
+
+print("13:", type(dictObj), dictObj)
+
+# 14. 13번 에서 선언한 dict 항목에 <소아 - 0> 항목을 추가해보세요.
+
+dictObj['소아'] = -0
+
+print("14:", dictObj)
+
+# 15. 13번에서 선언한 딕셔너리(dict)에서 Key 항목만 출력해보세요.
+
+print("15:", dictObj.keys())
+
+# 16. 13번에서 선언한 딕셔너리(dict)에서 value 항목만 출력해보세요.
+
+print("16:", dictObj.values())
+
+
+# *** 결과 값만 정확하게 출력되면 됩니다. ^^* 고생하셨습니다. ***
+```
+
+### 느낀점
+
+파이썬 코드 작성시에 변수를 빌트인 객체와 같이 줘도 문제가 없어서 계속 str, list, obj 이런식으로 변수명을 선언했다가 출력할 때 에러가 생겼다
+
+자율성이 부여되는 만큼 나만의 규칙을 정하고 변수명을 지어야겠다!
+
+`#6, #7, #9` 번은 이런식으로 풀라고 내주신 문제가 아닌 것 같은데 기존 js 문제를 풀던 생각대로 풀다보니 이렇게 풀게 되었다
+
+정답은 같겠지만, 선생님의 풀이를 듣고 만약에 다른 것이 있다면 추가적으로 공부해야 겠다
+
+<details>
+<summary>선생님 풀이 보기</summary>
+
+```py
+# 1. 아래 문자열의 길이를 구해보세요.
+import re
+q1 = "dk2jd923i1jdk2jd93jfd92jd918943jfd8923"
+
+print("1. ", len(q1))
+
+# 2. print 함수를 사용해서 아래와 같이 출력해보세요.
+# apple;orange;banana;lemon
+
+print("2. ", "apple;orange;banana;lemon")
+
+# 3. 화면에 * 기호 100개를 표시하세요.
+
+print('3. ', '*' * 100)
+
+# 4. 문자열 "30" 을 각각 정수형, 실수형, 복소수형, 문자형으로 변환해보세요.
+
+print('4. ', int('30'))
+print('4. ', float('30'))
+print('4. ', complex('30'))
+print('4. ', str(30))
+
+# 5. 다음 문자열 "Niceman" 에서 "man" 문자열만 추출해보세요.
+
+q5 = 'Niceman'
+q5_idx = q5.index('man')
+
+print('5. ', q5[q5_idx:])
+print('5. ', q5[q5_idx: q5_idx+3])
+print("5. ", q5[4:7])
+
+# 6. 다음 문자열을 거꾸로 출력해보세요. : "Strawberry" 🔥 까먹었던 것
+
+q6 = "Strawberry"
+
+print('6. ', ''.join(list(reversed(q6))))
+print('6. ', q6[::-1])  # 🔥 까먹었던 것
+
+# 7. 다음 문자열에서 '-'를 제거 후 출력하세요. : "010-7777-9999" # 🔥 까먹었던 것
+
+q7 = "010-7777-9999"
+
+print("7. ", q7[0:3] + q7[4:8] + q7[9:])  # 🔥 까먹었던 것
+print("7. ", q7[0:3] + q7[4:8] + q7[9:13])
+
+# 정규 표현식 (regex, regular expression)
+
+# import re
+
+print("7. ", re.sub('[^0-9]', '', q7))
+
+# 8. 다음 문자열(URL)에서 "http://" 부분을 제거 후 출력하세요. : "http://daum.net"
+
+q8 = "http://daum.net"
+
+print("8. ", q8[7:])
+
+
+# 9. 다음 문자열을 모두 대문자, 소문자로 각각 출력해보세요. : "NiceMan"
+# 🔥 대문자/ 소문자를 대문자를 소문자로 소문자를 대문자로 라고 잘못 이해함
+
+print("9. ", "Niceman".upper())
+print("9. ", "Niceman".lower())
+
+# 10. 다음 문자열을 슬라이싱을 이용해서 "cde"만 출력하세요. : "abcdefghijklmn"
+
+q10 = "abcdefghijklmn"
+
+print("10. ", q10[2:5])
+
+
+# 11. 다음 리스트에서 "Apple" 항목만 삭제하세요. : ["Banana", "Apple", "Orange"] 🔥 remove 함수 사용
+
+q11 = ["Banana", "Apple", "Orange"]
+
+q11.remove("Apple")  # 🔥 remove 함수 사용
+
+print("11. ", q11)
+
+
+# 12. 다음 튜플을 리스트로 변환하세요. : (1,2,3,4)
+
+q12 = (1, 2, 3, 4)
+print("12. ", list(q12))
+
+# 13. 다음 항목을 딕셔너리(dict)으로 선언해보세요. : <성인 - 100000 , 청소년 - 70000 , 아동 - 30000>
+
+q13_dict = {
+    '성인': 100000,
+    '청소년': 70000,
+    '아동': 30000
+}
+
+q13_dict_2 = {}
+q13_dict_2['성인'] = 100000
+q13_dict_2['청소년'] = 70000
+q13_dict_2['아동'] = 30000
+
+print("13. ", q13_dict)
+print("13. ", q13_dict_2)
+
+
+# 14. 13번 에서 선언한 dict 항목에 <소아 - 0> 항목을 추가해보세요.
+
+q13_dict['소아'] = 0
+
+print("14. ", q13_dict)
+
+# 15. 13번에서 선언한 딕셔너리(dict)에서 Key 항목만 출력해보세요.
+
+print("15. ", q13_dict.keys())
+print("15. ", list(q13_dict.keys()))
+
+# 16. 13번에서 선언한 딕셔너리(dict)에서 value 항목만 출력해보세요.
+
+print("16. ", q13_dict.values())
+print("16. ", list(q13_dict.values()))
+
+# *** 결과 값만 정확하게 출력되면 됩니다. ^^* 고생하셨습니다. ***
+
+```
+
+</details>
