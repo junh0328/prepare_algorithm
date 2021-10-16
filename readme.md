@@ -1223,3 +1223,428 @@ print("16. ", list(q13_dict.values()))
 ```
 
 </details>
+
+## 2021.10.16, day 05
+
+### IF(조건문)
+
+- 조건문 기본 형식
+- 관계 연산자 실습(>, >=, <, <=, ==, !=)
+- 논리 연산자 실습(and, or, not)
+- 다중 조건문 (if, elif, else)
+- 중첩 조건문
+
+### 조건문 기본 형식
+
+```py
+# 예1
+if True:
+    print('참 입니다!')
+
+# 예2
+if False:
+    print('거짓 입니다')
+else:
+    print('참 입니다!')
+```
+
+### 관계 연산자 실습
+
+```py
+# 관계연산자
+# >, >=, <, <=, ==, !=
+
+a = 10
+b = 0
+
+print(a == b)
+print(a != b)
+print(a > b)
+print(a >= b)
+print(a < b)
+print(a <= b)
+
+# 참 거짓 종류 (True, False)
+
+# 참 : '내용', [내용], (내용), {내용}, 1 >>> 내용이 있는 자료형
+# 거짓 : '', [], (), {}, 0 >>> 내용이 없는 자료형
+
+city = ''
+
+if(city):
+    print(city)
+else:
+    print('city가 빈 문자열입니다')
+```
+
+### 논리 연산자 실습
+
+```py
+# and, or, not 문자 그대로 사용
+
+a = 100
+b = 60
+c = 15
+
+print('and: ', a > b and b > c)
+print('or: ', a > b or c > b)  # 둘 중 하나만 만족하더라도 true
+print('not:', not a > b)
+print('"not False:" ', not False)
+print('"Ænot True:" ', not True)
+
+print()
+```
+
+### 산술, 관계, 논리 연산자
+
+```py
+# 산술 > 관계 > 논리 순서로 적용 (우선순위)
+
+print('ex1 :', 5+10 > 0 and 7 + 3 == 10)
+
+score1 = 90
+score2 = 'A'
+
+
+if score1 >= 90 and score2 == 'A':
+    print('합격')
+else:
+    print('불합격입니다')
+```
+
+### 다중 조건문
+
+```py
+num = 2
+
+if num >= 90:
+    print("num 등급 A", num)
+elif num >= 80:
+    print("num 등급 B", num)
+elif num >= 70:
+    print("num 등급 C", num)
+else:
+    print('num 등급 D, 탈락', num)
+
+print()
+```
+
+### 중첩 조건문
+
+```py
+# 중첩 조건문
+
+age = 27
+height = 175
+
+if age >= 20:
+    if height >= 170:
+        print('A지망 지원 가능')
+    elif height >= 160:
+        print("B지망 지원 가능")
+    else:
+        print("지원 불가")
+else:
+    print("20세 이상 지원 가능")
+
+```
+
+### For, while (반복문)
+
+- 파이썬 코딩의 핵심
+- 시퀀스 타입 반복
+- Continue, Break
+- For - else 구문
+- 자료구조 변환
+
+### 기본 반복문 : for, while
+
+### while 문 >>> 조건이 true가 될 때까지 반복
+
+```py
+# while 문 v1 < 11 때까지 반복
+
+v1 = 1
+
+while v1 < 11:
+    print('v1 is :', v1)
+    v1 += 1
+```
+
+### for 문
+
+```py
+# for 문 0 - 9까지 반복
+# range(n) 함수에 매개변수가 1개라면 0부터 n-1 까지를 의미한다
+
+for v2 in range(10):
+    print('v2 is :', v2)
+    v2 += 1
+
+print()
+
+# for 문 1 - 10까지 반복
+
+for v3 in range(1, 11):
+    print('v3 is :', v3)
+    v3 += 1
+```
+
+### 시퀀스 타입 반복
+
+```py
+# 시퀀스(순서가 있는) 자료형 반복
+# 문자열, 리스트, 튜플, 집합, 딕셔너리 (집합과 딕셔너리는 순서가 없지만 이렇게 순회 가능한 타입들은 반복이 가능하다는 의미이다)
+# iterable 리턴 함수: range, reversed, enumerate, filter, map, zip
+
+# 리스트
+
+names = ["Kim", "Park", "cho", "Choi", "Yoo"]
+
+for i in names:
+    print("Yo are: ", i)
+
+# 문자열
+
+word = "dreams"
+
+for string in word:
+    print("Word : ", string)
+
+# 딕셔너리
+
+my_info = {
+    "name": "Kim",
+    "age": 13,
+    "city": "Seoul"
+}
+
+# 기본 값은 key를 순회한다
+
+for key in my_info:
+    print("my_info :", key)
+
+# 값을 순회
+
+for key in my_info.values():
+    print("my_info :", key)
+
+# 키를 순회
+
+for key in my_info.keys():
+    print("my_info :", key)
+
+# 아이템 (key, value)를 순회
+
+for key, value in my_info.items():
+    print("my_info :", key, value)
+
+name = "KennRY"
+
+for n in name:
+    if n.isupper():
+        print(n.lower())
+    else:
+        print(n.upper())
+```
+
+### break 문
+
+```py
+# break
+
+numbers = [14, 3, 4, 7, 10, 24, 17, 2, 33, 15, 34, 46, 48]
+
+for num in numbers:
+    if num == 33:
+        print("Found: 33!")
+        break
+    else:
+        print("not found: 33...")
+```
+
+### break문, for - else 구문
+
+```py
+# for 문 안에서 truthy한 값을 만나 break가 작동하지 않은 경우에는 else문에서 최종적으로 print 된다
+
+for num in numbers:
+    if num == 33:
+        print("Found: 33!")
+        break
+    else:
+        print("not found: 33...")
+else:
+    print("Not found 33......🥲")
+
+print()
+
+for num in numbers:
+    if num == 40:
+        print("Found: 40!")
+        break
+    else:
+        print("not found: 40...")
+else:
+    print("Not found 40......🥲")
+
+print()
+```
+
+### continue 문
+
+```py
+# continue
+# continue 문의 조건에 부합할 경우 continue 밑의 코드를 실행하지 않고 다음 조건으로 이동
+
+lt = ["1", 2, 5, True, 4.3, complex(4)]
+
+for v in lt:
+    if type(v) is float:
+        continue
+    print('float이 아닙니다...', type(v), v)
+
+print()
+```
+
+### 자료구조 변환
+
+```py
+name = "Niceman"
+print(reversed(name))
+print(list(reversed(name)))
+print(tuple(reversed(name)))
+print(set(reversed(name)))
+```
+
+### 나의 문제풀이
+
+```py
+# 1 ~ 5 문제 if 구문 사용
+# 1. 아래 딕셔너리에서 '가을'에 해당하는 과일을 출력하세요.
+q1 = {"봄": "딸기", "여름": "토마토", "가을": "사과"}
+
+if '가을' in q1.keys():
+    print('q1:', q1['가을'])
+
+
+# 2. 아래 딕셔너리에서 '사과'가 포함되었는지 확인하세요.
+q2 = {"봄": "딸기", "여름": "토마토", "가을": "사과"}
+
+if '사과' in q2.values():
+    print('q2:', '사과' in q2.values())
+
+# 3. 다음 점수 구간에 맞게 학점을 출력하세요.
+# 81 ~ 100 : A학점
+# 61 ~ 80 :  B학점
+# 41 ~ 60 :  C학점
+# 21 ~ 40 :  D학점
+#  0 ~ 20 :  E학점
+q3 = 90
+
+if (q3 > 80):
+    print('q3:', 'A 학점')
+elif (q3 > 60):
+    print('q3:', 'B 학점')
+elif (q3 > 40):
+    print('q3:', 'C 학점')
+elif (q3 > 20):
+    print('q3:', 'D 학점')
+else:
+    print('q3:', 'E 학점')
+
+# 4. 다음 세 개의 숫자 중 가장 큰수를 출력하세요.(if문 사용) : 12, 6, 18
+
+a = 12
+b = 6
+c = 18
+max = 0
+
+if (a > b):
+    max = a
+elif (a < b):
+    max = b
+
+if(c > max):
+    max = c
+    print('q4:', 'max', max)
+
+
+# 5. 다음 주민등록 번호에서 7자리 숫자를 사용해서 남자, 여자를 판별하세요. (1,3 : 남자, 2,4 : 여자)
+
+q5 = '9703281'
+
+if len(q5) != 7:
+    print('잘못 입력한 주민번호입니다 다시 입력해주세요')
+
+if(q5[6] == '1'):
+    print('남자입니다')
+elif(q5[6] == '3'):
+    print('남자입니다')
+elif(q5[6] == '2'):
+    print('여자입니다')
+elif(q5[6] == '4'):
+    print('여자입니다')
+else:
+    print('잘못된 주민번호입니다')
+
+# 6 ~ 10 반복문 사용(while 또는 for)
+
+# 6. 다음 리스트 중에서 '정' 글자를 제외하고 출력하세요.
+q6 = ["갑", "을", "병", "정"]
+list = []
+for v in q6:
+    if(v == '정'):
+        continue
+    list.append(v)
+
+print('q6:', list)
+
+# 7. 1부터 100까지 자연수 중 '홀수'만 한 라인으로 출력 하세요.
+
+q7 = []
+
+for v in range(1, 101, 2):
+    q7.append(v)
+
+print('q7:', q7)
+
+# 8. 아래 리스트 항목 중에서 5글자 이상의 단어만 출력하세요.
+q8 = ["nice", "study", "python", "anaconda", "!"]
+list = []
+for v in q8:
+    if(len(v) >= 5):
+        list.append(v)
+
+print('q8:', list)
+
+# 9. 아래 리스트 항목 중에서 소문자만 출력하세요.
+q9 = ["A", "b", "c", "D", "e", "F", "G", "h"]
+list = []
+for v in q9:
+    if v.islower():
+        list.append(v)
+
+print('q9:', list)
+
+
+# 10. 아래 리스트 항목 중에서 소문자는 대문자로 대문자는 소문자로 출력하세요.
+q10 = ["A", "b", "c", "D", "e", "F", "G", "h"]
+list = []
+
+for v in q10:
+    if v.isupper():
+        list.append(v)
+print('q10:', list)
+
+```
+
+### 느낀점
+
+`q4, q5`가 js의 lint와 달라져서 값이 다르게 나온다
+
+아직 파이썬의 기본 문법을 제대로 숙달하지 않은 느낌이다
+
+`q5`는 input을 받을 때 숫자를 입력하더라도 e.target.value의 값이 문자열로 넘어오게 된다
+
+이를 바로 넘겨받은 string 값을 바로 정수형 int로 형변환하고 싶었는데 의도대로 잘 되지 않았다 강의를 보고 해당 부분만 어떻게 처리하는지 봐야할 것 같다
