@@ -89,25 +89,96 @@ q3 = ["갑", "을", "병", "정"]
 
 print(''.join([s for s in q3 if s != '정']))
 
+q3_2 = [x for x in q3 if x != '정']
+print('q3_2:', q3_2)
 
-# 7. 1부터 100까지 자연수 중 '홀수'만 한 라인으로 출력 하세요.
+# 7. 1부터 100까지 자연수 중 '홀수'만 🔥 한 라인 🔥 으로 출력 하세요.
+
+# case1
 
 print(' '.join([str(s) for s in range(1, 100) if int(s) % 2 == 1]))
 
+# case 2
+
+for n in range(1, 101):
+    if n % 2 != 0:
+        print(n, end=',')  # 🔥 end 사용
+
+print()
 
 # 8. 아래 리스트 항목 중에서 5글자 이상의 단어만 출력하세요.
 q4 = ["nice", "study", "python", "anaconda", "!"]
 
+# case 1
+
 print([s for s in q4 if len(s) >= 5])
 
+print()
+
+# case 2
+
+for v in q4:
+    if len(v) >= 5:
+        print(v, end='')
+
+print()
 
 # 9. 아래 리스트 항목 중에서 소문자만 출력하세요.
 q5 = ["A", "b", "c", "D", "e", "F", "G", "h"]
 
+# case 1
+
 print([s for s in q5 if s.islower()])
 
+print()
+
+# case 2
+
+for v in q5:
+    if v.isupper():
+        continue
+    else:
+        print(v, end='')
+
+print()
 
 # 10. 아래 리스트 항목 중에서 소문자는 대문자로 대문자는 소문자로 출력하세요.
 q6 = ["A", "b", "c", "D", "e", "F", "G", "h"]
 
+# case 1
+
 print([s.upper() if s.islower() else s.lower() for s in q5])
+
+# case 2
+
+for v in q6:
+    if v.isupper():
+        print(v.lower())
+    else:
+        print(v.upper())
+
+# 리스트 컴프리헨션
+
+# 리스트를 쉽게 만들게 해주는 것
+
+# 기존
+
+numbers = []
+
+for n in range(1, 101):
+    numbers.append(n)
+
+print(numbers)
+
+print()
+
+# 리스트 컴프리핸션
+
+numbers2 = [x for x in range(1, 101)]
+print(numbers2)
+
+# 선언하는 법
+
+# x = [x for x in range(범위)]
+# x = [x for x in range(범위) if 조건문] >> 조건문이 true일 때 x로 append가 된다
+# x = [x for x in range(범위) if 조건문 else 조건문] >>> 조건문이 false 일 때 적용할 것 적을 수 있다
