@@ -1983,3 +1983,272 @@ print()
 print(user1.__dict__)
 print(user2.__dict__)
 ```
+
+## 2021.10.19, day 07
+
+### 클래스, 인스턴스, 네임스페이스
+
+```py
+# 클래스, 인스턴스 차이
+# 클래스 형태로 코딩을 한뒤 변수화하여
+# 인스턴스에 할당하고 메모리에 올려 이를 사용한다
+
+# 네임스페이스 : 객체를 인스턴스화 할 때 저장된 공간, 모든 자료형은 자신만의 네임스페이스를 가진다
+# 클래스 변수 : 직접 사용 가능 (js의 정적 메서드와 동일), 객체 보다 먼저 생성 , 해당 클래스를 사용하는 전체가 공유
+# 인스턴스 변수 : 객체마다 별도로 존재, 인스턴스 생성 후에 사용, 각각이 개인적으로 가짐
+```
+
+### self의 이해
+
+일반적으로 js에서의 this와 같은 의미로 쓰인다고 생각하면 될 것 같다
+
+```py
+# 예제 2
+# self의 이해
+
+
+class Parent:
+    # self 인자가 없을 경우, 인스턴스 생성 시에 사용할 수 없다
+    def function1():
+        print('non self function called!')
+
+    def function2(self):
+        print(id(self))
+        print('self function called!')
+
+
+child = Parent()
+
+# Parent.function1()
+# >>> 인스턴스로 만들었을 경우 finction1() 메서드는 self 키워드가 없어 누구의 인스턴스인지 알 수 없다
+# 따라서 self 가 없는 (자바스크립트에서의 정적 메서드) 클래스 메서드를 사용할 때는 클래스를 직접 호출하여 사용한다
+
+Parent.function1()
+
+child.function2()
+
+print(id(child))
+
+Parent.function2(child)
+```
+
+### 클래스 변수, 인스턴스 변수
+
+- 클래스 변수는 self가 없다 (js의 정적 메서드와 동일)
+- 인스턴스 변수는 self가 있다 (js의 this와 동일)
+
+```py
+# 예제 3
+# 클래스 변수 (self x), 인스턴스 변수 (self o)
+
+
+class WareHouse:
+    # 클래스 변수
+    stock_num = 0
+
+    def __init__(self, name):
+        self.name = name
+        WareHouse.stock_num += 1
+
+    def __del__(self):
+        WareHouse.stock_num -= 1
+
+
+user1 = WareHouse('kim')
+user2 = WareHouse('park')
+user3 = WareHouse('lee')
+
+print(user1.__dict__)
+print(user2.__dict__)
+print(user3.__dict__)
+
+print()
+
+print(WareHouse.__dict__)
+# ... 'stock_num': 3, 클래스 변수는 사용자 모두가 공유하기 때문에, init(초기화)한 멤버 수만큼 증가하여 3이 되었다
+
+print()
+
+print(user1.name)
+print(user2.name)
+print(user3.name)
+
+print()
+
+# 자기 네임 스페이스에 없다면 클래스 네임스페이스에서 찾는다
+# 클래스 네임스페이스에도 없다면 에러를 발생시킨다
+
+print(user1.stock_num)  # 3
+print(user2.stock_num)  # 3
+print(user3.stock_num)  # 3
+
+print()
+
+# user1을 지울 경우
+# 공통 클래스 변수인 stock에 할당된 값도 줄어들 것이다
+
+del user1
+
+print(user2.stock_num)  # 2
+print(user3.stock_num)  # 2
+
+```
+
+### 클래스 상속, 다중 상속
+
+- 클래스 상속
+- 클래스 상속 예제 코디
+- 클래스 다중 상속
+
+### 클래스 상속
+
+```py
+# 예제 1
+# 상속 기본
+# 슈퍼클래스(부모) 및 서브클래스(자식) -> 상속받을 경우 부모의 모든 속성, 메서드 사용 가능
+
+# 라면 클래스를 만든다고 가정
+# 속성(종류, 회사, 맛, 면 종류, 이름) : 부모
+
+
+class Car:
+  # 문자열로 무슨 클래스인지 적어주면 좋다
+    """Parent Class"""
+
+    def __init__(self, type, color):
+        self.type = type
+        self.color = color
+
+    def show(self):
+        return 'Car Class "Show Method!"'
+
+
+class BmwCar(Car):
+    """Sub Class"""
+
+    def __init__(self, car_name, type, color):
+        super().__init__(type, color)  # super() 부모에게 상속받은 type, color라는 의미
+        self.car_name = car_name
+
+    def show_model(self) -> None:
+        return "Your Car Name :%s" % self.car_name
+
+
+class BenzCar(Car):
+    """Sub Class"""
+
+    def __init__(self, car_name, type, color):
+        super().__init__(type, color)  # super() 부모에게 상속받은 type, color라는 의미
+        self.car_name = car_name
+
+    def show_model(self) -> None:
+        return "Your Car Name :%s" % self.car_name
+
+    # 자식 클래스에서도 부모와 같은 메서드를 선언할 경우
+    def show(self):
+        # 부모의 메서드도 다이렉트로 호출하고 싶을 경우에는 부모의 show 메서드를 super를 통해 선언해준다
+        print(super().show())
+        return 'Car Info : %s %s %s' % (self.car_name, self.type, self.color)
+
+
+model1 = BmwCar('520d', 'sedan', 'blue')
+
+# 프로퍼티
+
+print(model1.color)  # Super 부모로부터 옴
+print(model1.type)  # Super 부모로부터 옴
+print(model1.car_name)  # Sub 자식으로부터 옴
+
+print()
+
+# 메서드
+
+print(model1.show())  # Super
+print(model1.show_model())  # Sub
+
+print()
+
+print(model1.__dict__)
+# >>> {'type': 'sedan', 'color': 'blue', 'car_name': '520d'}
+
+# Method Overriding(오버라이딩) 올라타다
+
+# 자식 클래스를 통해 인스턴스를 만들었을 때
+# 부모에 있는 메서드(show)를 자식에서 동일한 이름(show)으로 선언할 경우 자식에 선언된 메서드로 '오버라이딩' 된다
+
+model2 = BenzCar('220d', 'suv', 'black')
+
+print(model1.show())  # Car Class "Show Method!"
+print(model2.show())  # Car Info : 220d suv black
+
+print()
+
+# Parent Method Call
+
+model3 = BenzCar('400d', 'suv', 'navy')
+print(model3.show())
+
+print()
+
+# Inheritance info (상속 정보를 리스트 형태로 반환한다)
+# mro() 메서드를 통해 상속의 정보를 확인할 수 있다
+
+print(BmwCar.mro())
+
+# >>> [<class '__main__.BmwCar'>, <class '__main__.Car'>, <class 'object'>]
+
+print(BenzCar.mro())
+
+# >>> [<class '__main__.BenzCar'>, <class '__main__.Car'>, <class 'object'>]
+
+print()
+```
+
+### 클래스 다중 상속
+
+```py
+# 예제 2
+# 다중 상속
+
+
+class X():
+    pass
+
+
+class Y():
+    pass
+
+
+class Z():
+    pass
+
+
+class A(X, Y):
+    pass
+
+
+class B(Y, Z):
+    pass
+
+
+class M(B, A, Z):
+    pass
+
+
+print(M.mro())
+
+# [
+# <class '__main__.M'>, <class '__main__.B'>, <class '__main__.A'>,
+# <class '__main__.X'>, <class '__main__.Y'>, <class '__main__.Z'>,
+# <class 'object'>
+# ]
+
+# 다중 상속이 가능하나 너무나 복잡한 다중 상속은 코드를 구현하는데 어려움이 있을 수 있다
+
+print()
+
+print(A.mro())
+
+# [<class '__main__.A'>, <class '__main__.X'>, <class '__main__.Y'>, <class 'object'>]
+
+```
