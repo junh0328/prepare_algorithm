@@ -2252,3 +2252,349 @@ print(A.mro())
 # [<class '__main__.A'>, <class '__main__.X'>, <class '__main__.Y'>, <class 'object'>]
 
 ```
+
+## 2021.10.20, day 08
+
+### 모듈, 패키지
+
+- 패키지 설정
+- 모듈 사용 및 Alias(= as) 설정
+- 패키지 사용 장점
+
+```py
+# 파이썬 모듈과 패키지
+
+# 모듈 - 미리 구성해놓은 함수, 프로퍼티들을 재사용하기 위해 모아놓는 파일 단위
+# 패키지 - 모듈들의 모음
+
+# 패키지 예제
+
+# 상대 경로
+# .. : 부모 디렉토리
+# . : 현재 디렉토리
+
+# 사용1, 클래스 형태 내부에 함수가 있을 때
+
+
+import builtins
+import math_pkg.prints as p
+from math_pkg.fibonaccit import Fibonacci
+from math_pkg.fibonaccit import Fibonacci as fb
+import math_pkg.calculations as c
+from math_pkg.calculations import div as d
+
+print("ex1 :", end='')
+Fibonacci.fibo(300)
+
+print()
+
+print("ex2 :", Fibonacci.fibo2(400))
+print("ex2 :", Fibonacci().title)
+
+# 사용2, (클래스), * 로 모듈의 기능 전체를 가져오기, 권장 x, 메모리를 많이 먹는다
+
+# from math_pkg.fibonaccit import *
+
+print()
+
+# 사용3, (클래스) alias 주기 (as = alias)
+# 가독성을 위해 as 를 통해 import 하는 클래스의 이름을 줄임말로 사용할 수 있다
+
+# from math_pkg.fibonaccit import Fibonacci as fb (린팅에 의해 위로 올라가기 때문에 주석처리)
+
+print("ex3 :", fb.fibo2(400))
+print("ex3 :", fb().title)
+
+print()
+
+# 사용4, (함수)
+# 모듈 전체 불러오기 + alias 사용하기
+
+# import math_pkg.calculations as c
+
+print("ex4 :", c.add(10, 20))
+print("ex4 :", c.mul(10, 20))
+print("ex4 :", c.div(10, 20))
+
+print()
+
+# 사용5, (함수)
+# 일부만 불러오기
+
+# from math_pkg.calculations import div as d
+
+print("ex5 :", int(d(100, 10)))
+
+print()
+
+# 사용6
+
+# import math_pkg.prints as p
+
+p.print1()
+p.print2()
+
+# 빌트인 내장 모듈 보기
+print(dir(builtins))
+
+```
+
+### 파일 Read, Write
+
+- Open 함수
+- 파일 모드의 이해
+- 파일 읽기 실습
+- 파일 쓰기 실습
+
+```py
+# 파일 읽기, 쓰기
+
+# 읽기 모드 : r(read)
+# 쓰기 모드(기존 파일 삭제 후 덮어 쓰기) : w(write)
+# 추가 모드(파일 생성 또는 추가) : a(append)
+
+# .. : 상대경로,
+# . : 절대 경로
+# 기타 : https://docs.python.org/3.7/library/functions.html#open
+
+# 파일 읽기
+# 예제 1
+
+from random import randint
+
+f = open('./resource/review.txt', 'r')
+content = f.read()
+print(content)
+
+print()
+# f 변수에 할당된 인스턴스를 볼 수 있다
+print(dir(f))
+
+print()
+# 반드시 close로 리소스를 반환해야 한다
+f.close()
+
+# 예제 2 (with 문 사용)
+# with 문 사용 시, close()를 사용하지 않아도 요청이 종료된다
+
+with open('./resource/review.txt', 'r') as f:
+    c = f.read()
+    print(c)
+    print(list(c))
+    # print(iter(c))
+
+print()
+
+# 예제 3
+with open('./resource/review.txt', 'r') as f:
+    for c in f:
+        print(c.strip())
+
+print()
+print()
+
+# 예제 4
+with open('./resource/review.txt', 'r') as f:
+    content = f.read()
+    print('>>> ', content)
+
+    # 문서를 읽는 커서가 제일 밑으로 온 경우 더 이상 가져오지 않는다 (빈 내용을 가져온다)
+    # 따라서 내용이 없다
+    content = f.read()
+    print('>>> ', content)
+
+print()
+print()
+
+# 예제 5 (한 문장 단위로 읽어 올 때)
+with open('./resource/review.txt', 'r') as f:
+    line = f.readline()
+    while line:
+        print(line, end=' #### ')
+        line = f.readline()
+
+print()
+print()
+
+# 예제 6
+with open('./resource/review.txt', 'r') as f:
+    contents = f.readlines()
+    print(contents)
+    for c in contents:
+        print(c, end=' ****** ')
+
+print()
+print()
+
+# 예제 7
+score = []
+with open('./resource/score.txt', 'r') as f:
+    for line in f:
+        score.append(int(line))
+    print(score)
+
+print('avg :{:6.3}'.format(sum(score)/len(score)))
+
+
+print()
+print()
+
+# 파일 쓰기
+
+# 예제 1 'w'
+with open('./resource/test1.txt', 'w') as f:
+    f.write('Nice man!\n')
+
+# 예제 2 'a'
+with open('./resource/test1.txt', 'a') as f:
+    f.write('good man!\n')
+
+# 예제 3
+
+# from random import randint 랜덤 인트 만들기
+
+with open('./resource/test2.txt', 'w') as f:
+    for cnt in range(7):
+        f.write(str(randint(1, 50)))
+        f.write('\n')
+
+# 예제 4
+
+# readlines : 리스트형태로 파일을 읽어오는 형태
+# writelines : 리스트 -> 파일로 저장하는 형태
+with open('./resource/test3.txt', 'w') as f:
+    list = ['kim\n', 'park\n', 'lee\n']
+    f.writelines(list)
+
+# 예제 5
+
+# 프린트 문으로 파일에 직접 문자열 적어주기
+with open('./resource/test4.txt', 'w') as f:
+    print('test Contents1!', file=f)
+    print('test Contents2!', file=f)
+
+```
+
+### 다양한 Exceptions
+
+- 파이썬 예외 종류
+- 문법적 에러 발생 실습
+- 런타임 에러 발생 실습
+- Try-except-else-finally
+
+```py
+# Section10
+# 파이썬 예외처리의 이해
+
+# 예외 종류
+# 문법적으로 에러가 없지만, 코드 실행(런타임) 프로세스에서 발생하는 예외 처리도 중요하다
+# linter : 코드 스타일, 문법 체크
+
+# ① SyntaxError (문법 에러) : 잘못된 문법
+
+# print('Test)
+# SyntaxError: unterminated string literal (detected at line 10)
+
+# if True >>> SyntaxError: expected ':'
+#  pass
+# x => y
+
+# ② NameError : 참조 변수가 없을 때 생기는 에러
+
+import time
+
+a = 10
+b = 15
+
+# print(c)
+# NameError: name 'c' is not defined
+
+# ③ ZeroDivisionError : 0 나누기 에러
+
+# print(10 / 0)
+# ZeroDivisionError: division by zero
+
+# ④ IndexError : 인덱스 범위가 오버(넘쳤을)됐을 때
+
+x = [10, 20, 30]
+print(x[0])
+# print(x[3]) >>> IndexError: list index out of range
+
+# ⑤ KeyError (Dictionaries에 Key가 없을 때)
+
+dic = {'name': 'Kim', 'Age': 33, 'city': 'Seoul'}
+# print(dic['hobby']) >>> KeyError: 'hobby'
+
+print(dic.get('hobby'))  # >>> None
+
+# ⑥ AttributeError : 모듈, 클래스에 있는 잘못된 속성 사용시에 예외
+
+# import time
+
+print(time.time())
+# print(time.month()) >>> AttributeError: module 'time' has no attribute 'month'
+
+# ⑦ valueError : 참조 값이 없을 때 발생
+
+x = [1, 5, 9]
+
+# x.remove(10)  >>> ValueError: list.remove(x): x not in list
+# x.index(10)
+
+# ⓼ FileNotFoundError 경로를 찾을 수 없을 때
+
+# f = open('test.txt', 'r') >>> FileNotFoundError: [Errno 2] No such file or directory: 'test.txt'
+
+# ⑨ TypeError
+
+x = [1, 2]
+y = (3, 4, 5)
+z = 'test'
+
+# print(x + y) >>> TypeError: can only concatenate list (not "tuple") to list
+# print(x + z)
+
+# 따라서 형 변환이 필요하다
+print(x + list(y))
+
+# 항상 예외가 발새앟지 않을 것으로 가정하고 먼저 코딩을 해야 한다!
+# 그 후 런타임 예외 발생시 예외 처리 코딩하는 단계를 권장한다(EAFP 코딩 스타일)
+
+# 예외 처리 기본
+# try : 에러가 발생할 가능성이 있는 코드 실행
+# except : 에러명 1
+# except : 에러명 2
+# else : 에러가 발생하지 않았을 경우 실행
+# finally : 항상 실행
+
+# 예제 1
+
+# name = ['kim', 'lee', 'park']
+
+# try:
+#     z = 'kim'
+#     # z = 'shin'
+#     x = name.index(z)
+#     print('{} Found it! in name'.format(z, x+1))
+# except ValueError:
+#     print('Not Found it! - Occured valueError! ')
+# else:
+#     print('Ok! else!')
+
+print()
+
+# 예제 2
+
+name = ['kim', 'lee', 'park']
+
+try:
+    z = 'kim'
+    # z = 'shin'
+    x = name.index(z)
+    print('{} Found it! in name'.format(z, x+1))
+except:  # Error 의 종류를 적지 않으면 모든 Error가 해당 except로 들어온다
+    print('Not Found it! - Occured valueError! ')
+else:
+    print('Ok! else!')
+
+```
