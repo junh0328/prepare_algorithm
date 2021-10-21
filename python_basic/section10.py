@@ -100,6 +100,47 @@ print()
 
 # 예제 2
 
+# name = ['kim', 'lee', 'park']
+
+# try:
+#     z = 'kim'
+#     # z = 'shin'
+#     x = name.index(z)
+#     print('{} Found it! in name'.format(z, x+1))
+# except:  # Error 의 종류를 적지 않으면 모든 Error가 해당 except로 들어온다
+#     print('Not Found it! - Occured valueError! ')
+# else:
+#     print('Ok! else!')
+
+# 예제3
+
+# name = ['kim', 'lee', 'park']
+
+# try:
+#     z = 'kim'
+#     # z = 'shin'
+#     x = name.index(z)
+#     print('{} Found it! in name'.format(z, x+1))
+# except:  # Error 의 종류를 적지 않으면 모든 Error가 해당 except로 들어온다
+#     print('Not Found it! - Occured valueError! ')
+# else:
+#     print('Ok! else!')
+# finally:
+#     print('무조건 실행!')
+
+# 예제 4
+# 예외처리는 하지 않지만, 무조건 수행되는 코딩 패턴
+
+try:
+    print('Try')
+finally:
+    print('OK Finally')
+
+# 예제 5
+
+# 에러를 계층적으로 잡기
+# 가장 방대한 에러를 다루는 기본 except는 가장 마지막에 적어주는 것이 좋다
+
 name = ['kim', 'lee', 'park']
 
 try:
@@ -107,7 +148,34 @@ try:
     # z = 'shin'
     x = name.index(z)
     print('{} Found it! in name'.format(z, x+1))
-except:  # Error 의 종류를 적지 않으면 모든 Error가 해당 except로 들어온다
-    print('Not Found it! - Occured valueError! ')
+except ValueError as v:
+    print('Not Found it! - Occured value Error! ')
+    print(v)
+except IndexError:
+    print('Not Found it! - Occured index Error! ')
+except Exception:
+    print('Not Found it! - Occured Error! ')
 else:
     print('Ok! else!')
+finally:
+    print('무조건 실행!')
+
+print()
+
+# 예제 6
+# 예외를 직접 방생 : raise: 일으키다
+# raise 키워드로 예외 직접 발생
+
+try:
+    # a = 'Lee'
+    a = 'Kim'
+    if a == 'Kim':
+        print('Ok 허가')
+    else:  # '김'이 아닌 경우네는 ValueError를 발생시키도록 프로그램을 구현해놓음
+        raise ValueError
+except ValueError:
+    print('문제 발생!')
+except Exception as f:
+    print(f)
+else:  # 다 통과될 경우
+    print('done')
