@@ -16,10 +16,12 @@ with open('./resource/sample1.csv', 'r', encoding='euc-kr') as f:
     # next(reader) Header (1행) 를 스킵한다
 
     # 확인
-    print(reader)
-    print(type(reader))
+    print(reader)  # >>> <_csv.reader object at 0x11cea0820>
+    print(type(reader))  # >>> <class '_csv.reader'>
 
     print(dir(reader))
+    # >>> ['__class__', '__delattr__', ... , '__iter__' , ...]
+    # iterate 속성이 포함되어 있기 때문에 순회를 할 수 있다.
     print()
 
     for v in reader:

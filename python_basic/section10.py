@@ -90,13 +90,13 @@ print(x + list(y))
 #     z = 'kim'
 #     # z = 'shin'
 #     x = name.index(z)
-#     print('{} Found it! in name'.format(z, x+1))
+#     print('{} Found it! in name {}'.format(z, x + 1))
 # except ValueError:
 #     print('Not Found it! - Occured valueError! ')
 # else:
 #     print('Ok! else!')
 
-print()
+# print()
 
 # 예제 2
 
@@ -166,16 +166,16 @@ print()
 # 예외를 직접 방생 : raise: 일으키다
 # raise 키워드로 예외 직접 발생
 
-try:
-    # a = 'Lee'
-    a = 'Kim'
-    if a == 'Kim':
-        print('Ok 허가')
-    else:  # '김'이 아닌 경우네는 ValueError를 발생시키도록 프로그램을 구현해놓음
-        raise ValueError
-except ValueError:
-    print('문제 발생!')
-except Exception as f:
-    print(f)
-else:  # 다 통과될 경우
-    print('done')
+# try:
+#     # a = 'Lee'
+#     a = 'Kim'
+#     if a == 'Kim':
+#         print('Ok 허가')
+#     else:  # '김'이 아닌 경우네는 ValueError를 발생시키도록 프로그램을 구현해놓음
+#         raise ValueError
+# except ValueError:
+#     print('문제 발생!')
+# except Exception as f:
+#     print(f)
+# else:  # 다 통과될 경우
+#     print('done')

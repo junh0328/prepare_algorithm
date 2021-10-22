@@ -2830,6 +2830,9 @@ print('sqlite3.version :', sqlite3.version)
 print('sqlite3.sqlite_version: ', sqlite3.sqlite_version)
 
 # DB 생성 & Auto Commit (반영) / Rollback (되돌리기)
+# 가상환경이 설정된 내부 디렉토리에서 받아야 하므로
+# pwd 를 통해 현재 파일의 경로를 찾은 후, resource 디렉토리 내부에 database.db 라는 경로를 설정하였다
+# isolation_level=None 을 통해 연결이 종료되었을 때 connection을 끊을 수 있도록 설정하였다.
 
 conn = sqlite3.connect(
     '/Users/leejunhee/FastCampus/python_basic/resource/database.db', isolation_level=None)
@@ -2846,6 +2849,261 @@ c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username tex
 
 # 데이터 삽입
 # ? (물음표)로 처리된 데이터는 뒤에 튜플 형식으로 추가해줘야 한다
+# 튜플 맨 마지막에는 ' , '를 추가해야 오류가 발생하지 않는다
 c.execute("INSERT INTO users VALUES(1, 'LEE', 'junh0328@naver.com', '010-9170-1796', 'https://github.com/junh0328', ?)", (nowDatetime,))
 
 ```
+
+## 2021.10.22, day 10
+
+### 데이터베이스 및 테이블 생성 이어서...
+
+```py
+# 정석적인 데이터 삽입구조
+c.execute("INSERT INTO users(id, username, email, phone, website, regdate) VALUES (?, ?, ?, ?, ?, ?)",
+          (2, 'Park', 'Park@daum.net', '010-1111-1111', 'park.com', nowDatetime))
+
+```
+
+### 데이터 다수 삽입
+
+```py
+
+# Many 삽입 (많은 데이터를 한번에 삽입하기) (튜플, 리스트 형태로 삽입하기)
+
+userList = (
+    (3, 'Cho', 'cho@naver.com', '010-2222-2222', 'cho.com', nowDatetime),
+    (4, 'kim', 'kim@naver.com', '010-2222-2222', 'kim.com', nowDatetime),
+    (5, 'Paik', 'Paik@naver.com', '010-2222-2222', 'paik.com', nowDatetime),
+)
+
+c.executemany("INSERT INTO users(id, username, email, phone, website, regdate) \
+    VALUES (?,?,?,?,?,?)", userList)
+```
+
+### 데이터 삭제 / 커밋 / 롤백
+
+```py
+# 테이블 데이터 삭제
+# rowcount를 통해 몇개의 데이터가 들어가있는지 확인할 수 있다.
+
+conn.execute("DELETE FROM users")
+print('users db deleted:', conn.execute(
+    "DELETE FROM users").rowcount)  # >>> users db deleted: 5
+
+# 커밋 (DB에 추가) : isolation_level = None 일 경우 자동으로 반영한다
+conn.commit()
+
+# 롤백 : 커밋한 데이터 되돌리기(없애기)
+conn.rollback()
+
+# 접속 해제
+conn.close()
+```
+
+### 다양한 테이블 조회
+
+- SQLite 기본 사용법
+- SELECT
+- Where
+- Tuple, Dictionary Mapping
+
+```py
+# 파이썬 데이터베이스 연동(SQLite)
+# 테이블 조회
+
+import sqlite3
+
+# DB 파일 조회(없으면 새로 생성)
+conn = sqlite3.connect(
+    '/Users/leejunhee/FastCampus/python_basic/resource/database.db')  # 본인 DB 경로
+
+# (마우스) 커서 바인딩 (Cursor Binding)
+c = conn.cursor()
+
+# 데이터 조회 (전체)
+c.execute("SELECT * from users")
+
+# 커서 위치가 변경
+# 1개 로우 선택
+
+print('One row -> \n', c.fetchone())
+# One row -> (1, 'LEE', 'junh0328@naver.com', '010-9170-1796', 'https://github.com/junh0328', '2021-10-22 11:48:15')
+
+# 지정 로우 선택
+print('Three => \n', c.fetchmany(size=3))  # >>> 배열 형태로 로우 printing
+
+# [
+# (2, 'Park', 'Park@daum.net', '010-1111-1111', 'park.com', '2021-10-22 11:48:15'),
+# (3, 'Cho', 'cho@naver.com', '010-2222-2222', 'cho.com', '2021-10-22 11:48:15'),
+# (4, 'kim', 'kim@naver.com', '010-2222-2222', 'kim.com', '2021-10-22 11:48:15')
+# ]
+
+# 전체 로우 선택
+print('All -> \n', c.fetchall())
+# 남은 데이터를 리스트 형태로 가져옴 but, 현재 db에 5개만 저장했으므로 마지막 하나를 가져오는 결과
+
+# >>> [(5, 'Paik', 'Paik@naver.com', '010-2222-2222', 'paik.com', '2021-10-22 11:48:15')]
+
+# 만약 커서가 마지막 로우를 가리키는데 다시 로우를 불러온다면?
+print('All -> \n', c.fetchall())
+
+# 빈 배열을 가져온다
+# >>> All -> []
+
+
+# DB 순회 1
+
+# rows = c.fetchall()
+for row in rows:
+    print('SELECT 1 >>>', row)
+
+# DB 순회 2
+for row in c.fetchall():
+    print('SELECT2 >>>', row)
+
+# DB 순회 3
+for row in c.execute('SELECT * FROM users ORDER BY id desc'):
+    print('SELECT3 >>>', row)
+
+# 보통 순회 2번을 많이 쓴다
+
+print()
+
+# WHERE Retrieve1
+# 튜플 형식으로 가져오기
+param1 = (3,)
+c.execute('SELECT * FROM users WHERE id = ?', param1)
+print('param1', c.fetchone())
+
+# 3번 데이터는 하나이기 때문에 3번에 대한 데이터는 더 없으므로 빈 배열을 출력하게 된다
+print('param1', c.fetchall())  # 데이터 없음
+
+print()
+
+# WHERE Retrieve2
+# 정수형으로 가져오기
+param2 = 4
+c.execute('SELECT * FROM users WHERE id = "%s"' % param2)  # %s, %f, %d
+print('param2', c.fetchone())
+print('param2', c.fetchall())  # 데이터 없음
+
+print()
+
+# WHERE Retrieve3
+# 딕셔너리로 가져오기
+c.execute('SELECT * FROM users WHERE id =:Id', {"Id": 5})
+print('param3', c.fetchone())
+print('param3', c.fetchall())  # 데이터 없음
+
+print()
+
+# WHERE Retrieve4
+param4 = (3, 5)
+c.execute("SELECT * FROM users WHERE id IN(?,?)", param4)
+print('param4', c.fetchall())  # 데이터 없음
+
+print()
+
+# WHERE Retrieve5
+# c.execute("SELECT * FROM users WHERE id IN(?,?)", (3, 5))
+c.execute("SELECT * FROM users WHERE id IN('%d', '%d')" % (3, 5))
+print('param5', c.fetchall())  # 데이터 없음
+
+
+print()
+
+# WHERE Retrieve6 (딕셔너리 형태)
+
+c.execute("SELECT * FROM users WHERE id=:id1 OR id=:id2", {"id1": 2, "id2": 5})
+print('param6', c.fetchall())  # 데이터 없음
+
+print()
+
+# Dump 출력
+# DB 에 저장한 명령어 (SELECT, DELETE, CREATE, ...) 를 백업해두는 것
+# >>> 현 폴더에서 dump.sql로 생성
+
+with conn:
+    with open('/Users/leejunhee/FastCampus/python_basic/resource/dump.sql', 'w') as f:
+        for line in conn.iterdump():
+            f.write('%s\n' % line)
+        print('Dump Print Complete')
+
+# f.close(), conn.close() 함수가 with문으로 인해 작성하지 않더라도 자동으로 동작한다
+```
+
+### 테이블 수정, 삭제
+
+- UPDATE
+- DELETE
+- db 사용 권장 이유
+
+### UPDATE & DELETE
+
+```py
+# 파이썬 데이터베이스 연동(SQLite)
+# 테이블 데이터 수정 및 삭제
+
+# DB 사용을 위한 패키지 import
+import sqlite3
+
+# DB 생성(파일)
+
+conn = sqlite3.connect(
+    '/Users/leejunhee/FastCampus/python_basic/resource/database.db')
+
+# 해당 경로애 있는 db 파일 DB Brwoser for SQLite로 열기
+
+# Cursor 연결
+c = conn.cursor()
+
+# 데이터 수정 1 (기본적인 형태로 수정하기 SQL 문법)
+c.execute("UPDATE users SET username = ? WHERE id = ?", ('niceman', 2))
+
+# 데이터 수정 2 (딕셔너리 형태로 수정하기)
+c.execute("UPDATE users SET username = :name WHERE id = :id",
+          {"name": 'goodman', "id": 3})
+
+# # 데이터 수정 3
+c.execute("UPDATE users SET username = '%s' WHERE id = '%s'" % ('badboy', 4))
+
+# 중간 데이터 확인 1
+
+for user in c.execute("SELECT * FROM users"):
+    print('user1:', user)
+
+
+# 데이터 삭제 1
+c.execute("DELETE FROM users WHERE id = ?", (2,))
+
+# 데이터 삭제 2 (딕셔너리 형태로 삭제하기)
+c.execute("DELETE FROM users WHERE id = :id", {"id": 3})
+
+# 데이터 삭제 3
+c.execute("DELETE FROM users WHERE id = '%s'" % (4))
+# c.execute("DELETE FROM users WHERE id = '%s'" % 4) >>> 튜플이 하나일 경우에는 소괄호를 적지 않아도 된다
+
+print()
+
+# 중간 데이터 확인 2
+
+for user in c.execute("SELECT * FROM users"):
+    print('user2:', user)
+
+# 테이블 전체 데이터 삭제
+print("user db deleted :", conn.execute("DELETE FROM users").rowcount, " rows")
+
+# 커밋 : DB(SQLite)에 반영하기
+conn.commit()
+
+# 접속 해제
+conn.close()
+
+```
+
+### db 권장 이유
+
+- db는 여러사람이 관리해도 통합적으로 관리를 해준다
+- 최신 데이터를 유지해준다
+- 데이터의 무결성을 유지시켜준다
