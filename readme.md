@@ -81,6 +81,8 @@ print("{a} are {b}".format(a='You', b='Me'))
 
 ```py
 # format 함수를 쓰고 싶지 않고, 문자열 또는 정수, 실수를 나타내고 싶다면? 아래와 같은 방법으로 사용 가능하다
+# 튜플 형태 ( , ) 로 format 형태를 대신하여 적을 수 있다
+
 # %s: 문자, %d: 정수, %f: 실수
 
 print("%s's favorite number is %d" % ('junhee', 7))
@@ -1639,6 +1641,173 @@ print('q10:', list)
 
 ```
 
+<details>
+<summary>선생님 풀이 보기</summary>
+
+```py
+# Section05-3
+# 파이썬 흐름제어(제어문)
+# 제어문 관련 퀴즈(정답은 영상)
+
+# 1 ~ 5 문제 if 구문 사용
+# 1. 아래 딕셔너리에서 '가을'에 해당하는 과일을 출력하세요.
+import math
+q1 = fruit = {"봄": "딸기", "여름": "토마토", "가을": "사과"}
+
+# case 1
+
+for k in q1.keys():
+    if k == '가을':
+        print(q1[k])
+# case 2
+
+for k, v in q1.items():
+    if k == '가을':
+        print(v)
+
+# 2. 아래 딕셔너리에서 '사과'가 포함되었는지 확인하세요.
+
+q2 = fruit = {"봄": "딸기", "여름": "토마토", "가을": "사과"}
+
+for k, v in q2.items():
+    if v == '사과':
+        print(k, v)
+        break
+else:
+    print('사과 없음')
+
+
+# 3. 다음 점수 구간에 맞게 학점을 출력하세요.
+# 81 ~ 100 : A학점
+# 61 ~ 80 :  B학점
+# 41 ~ 60 :  C학점
+# 21 ~ 40 :  D학점
+#  0 ~ 20 :  E학점
+
+score = 100
+grade = ''
+if 0 < score > 100:
+    grade = '나가'
+elif score > 80:
+    grade = 'A'
+elif score > 60:
+    grade = 'B'
+elif score > 40:
+    grade = 'C'
+elif score > 20:
+    grade = 'D'
+elif score >= 0:
+    grade = 'E'
+
+print(grade)
+
+
+# 4. 다음 세 개의 숫자 중 가장 큰수를 출력하세요.(if문 사용) : 12, 6, 18
+
+a = 12
+b = 6
+c = 18
+best = 0
+
+best = a
+if b > a:
+    best = b
+if c > b:
+    best = c
+
+print('max:', max(a, b, c))
+
+print(best)
+
+
+# 5. 다음 주민등록 번호에서 7자리 숫자를 사용해서 남자, 여자를 판별하세요. (1,3 : 남자, 2,4 : 여자)
+
+s = '891022-2473837'
+if int(s[7]) % 2 == 0:
+    print('여자')
+else:
+    print('남자')
+
+
+# 6 ~ 10 반복문 사용(while 또는 for)
+
+# 6. 다음 리스트 중에서 '정' 글자를 제외하고 출력하세요.
+q3 = ["갑", "을", "병", "정"]
+
+print(''.join([s for s in q3 if s != '정']))
+
+q3_2 = [x for x in q3 if x != '정']
+print('q3_2:', q3_2)
+
+# 7. 1부터 100까지 자연수 중 '홀수'만 🔥 한 라인 🔥 으로 출력 하세요.
+
+# case1
+
+print(' '.join([str(s) for s in range(1, 100) if int(s) % 2 == 1]))
+
+# case 2
+
+for n in range(1, 101):
+    if n % 2 != 0:
+        print(n, end=',')  # 🔥 end 사용
+
+print()
+
+# 8. 아래 리스트 항목 중에서 5글자 이상의 단어만 출력하세요.
+q4 = ["nice", "study", "python", "anaconda", "!"]
+
+# case 1
+
+print([s for s in q4 if len(s) >= 5])
+
+print()
+
+# case 2
+
+for v in q4:
+    if len(v) >= 5:
+        print(v, end='')
+
+print()
+
+# 9. 아래 리스트 항목 중에서 소문자만 출력하세요.
+q5 = ["A", "b", "c", "D", "e", "F", "G", "h"]
+
+# case 1
+
+print([s for s in q5 if s.islower()])
+
+print()
+
+# case 2
+
+for v in q5:
+    if v.isupper():
+        continue
+    else:
+        print(v, end='')
+
+print()
+
+# 10. 아래 리스트 항목 중에서 소문자는 대문자로 대문자는 소문자로 출력하세요.
+q6 = ["A", "b", "c", "D", "e", "F", "G", "h"]
+
+# case 1
+
+print([s.upper() if s.islower() else s.lower() for s in q5])
+
+# case 2
+
+for v in q6:
+    if v.isupper():
+        print(v.lower())
+    else:
+        print(v.upper())
+
+```
+
+</details>
+
 ### 느낀점
 
 `q4, q5`가 js의 lint와 달라져서 값이 다르게 나온다
@@ -2274,13 +2443,17 @@ print(A.mro())
 # . : 현재 디렉토리
 
 # 사용1, 클래스 형태 내부에 함수가 있을 때
+# 클래스를 불러와야 하는 경우 (ex: import Fibonacci)
+# from 문을 통해 해당 클래스의 위치를 기입해줘야 한다! 🔥
 
+# from math_pkg.fibonacci import Fibonacci
 
 import builtins
 import math_pkg.prints as p
-from math_pkg.fibonaccit import Fibonacci
-from math_pkg.fibonaccit import Fibonacci as fb
 import math_pkg.calculations as c
+
+from math_pkg.fibonacci import Fibonacci
+from math_pkg.fibonacci import Fibonacci as fb
 from math_pkg.calculations import div as d
 
 print("ex1 :", end='')
@@ -2492,7 +2665,7 @@ with open('./resource/test4.txt', 'w') as f:
 
 # ① SyntaxError (문법 에러) : 잘못된 문법
 
-# print('Test)
+print('Test)
 # SyntaxError: unterminated string literal (detected at line 10)
 
 # if True >>> SyntaxError: expected ':'
@@ -2506,24 +2679,24 @@ import time
 a = 10
 b = 15
 
-# print(c)
+print(c)
 # NameError: name 'c' is not defined
 
 # ③ ZeroDivisionError : 0 나누기 에러
 
-# print(10 / 0)
+print(10 / 0)
 # ZeroDivisionError: division by zero
 
 # ④ IndexError : 인덱스 범위가 오버(넘쳤을)됐을 때
 
 x = [10, 20, 30]
 print(x[0])
-# print(x[3]) >>> IndexError: list index out of range
+print(x[3]) # >>> IndexError: list index out of range
 
 # ⑤ KeyError (Dictionaries에 Key가 없을 때)
 
 dic = {'name': 'Kim', 'Age': 33, 'city': 'Seoul'}
-# print(dic['hobby']) >>> KeyError: 'hobby'
+print(dic['hobby']) # >>> KeyError: 'hobby'
 
 print(dic.get('hobby'))  # >>> None
 
@@ -2532,18 +2705,18 @@ print(dic.get('hobby'))  # >>> None
 # import time
 
 print(time.time())
-# print(time.month()) >>> AttributeError: module 'time' has no attribute 'month'
+print(time.month()) # >>> AttributeError: module 'time' has no attribute 'month'
 
 # ⑦ valueError : 참조 값이 없을 때 발생
 
 x = [1, 5, 9]
 
-# x.remove(10)  >>> ValueError: list.remove(x): x not in list
+x.remove(10)  # >>> ValueError: list.remove(x): x not in list
 # x.index(10)
 
 # ⓼ FileNotFoundError 경로를 찾을 수 없을 때
 
-# f = open('test.txt', 'r') >>> FileNotFoundError: [Errno 2] No such file or directory: 'test.txt'
+f = open('test.txt', 'r') # >>> FileNotFoundError: [Errno 2] No such file or directory: 'test.txt'
 
 # ⑨ TypeError
 
@@ -2551,7 +2724,7 @@ x = [1, 2]
 y = (3, 4, 5)
 z = 'test'
 
-# print(x + y) >>> TypeError: can only concatenate list (not "tuple") to list
+print(x + y) # >>> TypeError: can only concatenate list (not "tuple") to list
 # print(x + z)
 
 # 따라서 형 변환이 필요하다
@@ -3107,3 +3280,427 @@ conn.close()
 - db는 여러사람이 관리해도 통합적으로 관리를 해준다
 - 최신 데이터를 유지해준다
 - 데이터의 무결성을 유지시켜준다
+
+## 2021.10.23, day 11
+
+# 타이핑 게임 기본 완성
+
+- 단어 리스트 로드
+- 총 게임 시간 측정
+- 정답 개수 체크
+
+```py
+# Section13-1
+# 업그레이드 타이핑 게임 제작
+# 타이핑 게임 제작 및 기본 완성
+
+import random   # 랜덤으로 불러오기 위함
+import time     # 시간 측정을 위함
+
+words = []      # 영어 단어 리스트(1000개 로드)
+
+n = 1           # 게임 시도 횟수
+cor_cnt = 0     # 정답 개수
+
+with open('./resource/word.txt', 'r') as f:
+    for c in f:
+        words.append(c.strip())
+
+# print(words)    # 단어 리스트 확인
+
+input("Ready? Press Enter Key!")  # Enter Game Start!
+
+start = time.time()  # 시작한 시간 (Start time)
+
+while n <= 5:
+    random.shuffle(words)  # words 단어를 섞는다
+    q = random.choice(words)  # 뽑아와서 q 에 할당한다
+
+    print()
+
+    print("*Question # {}".format(n))
+    print(q)      # 문제 출력
+
+    x = input()   # 타이핑 입력
+
+    print()
+
+    if str(q).strip() == str(x).strip():
+        print('Pass!')
+        cor_cnt += 1
+    else:
+        print('Wrong!')
+
+    n += 1
+
+end = time.time()       # 끝난 시간 End Time
+et = end - start        # 총 게임 시간
+et = format(et, ".3f")  # 소숫점 세번째 자리까지 출력
+
+if cor_cnt >= 3:
+    print('합격')
+else:
+    print('불합격')
+
+# 수행 시간 출력
+print('게임 시간:', et, "초", "정답 개수 : {}".format(cor_cnt))
+
+# 시작 지점
+if __name__ == '__main__':
+    pass
+```
+
+# 타이핑 게임 최종 완성
+
+- 기록 결과 DB 저장
+- 효과음 적용
+- 최종 테스트
+
+```py
+# Section13-2
+# 업그레이드 타이핑 게임 제작
+# 타이핑 게임 제작 및 기본 완성
+
+import random   # 랜덤으로 불러오기 위함
+import time     # 시간 측정을 위함
+import pygame   # 사운드 출력 필요 모듈
+import sqlite3  # DB 입력을 위한 모듈
+import datetime
+
+# 소리 설정을 위한 모듈 사용
+
+pygame.init()
+pygame.mixer.init()
+soundaGood = pygame.mixer.Sound('./sound/good.wav')
+soundaBad = pygame.mixer.Sound('./sound/bad.wav')
+
+# DB 생성 & Auto Commit
+# 본인 DB 경로
+
+# DB 파일 조회(없으면 새로 생성)
+# 본인 DB 경로
+# isolation_level=None 옵션을 주어야 auto commit 이 가능하다
+conn = sqlite3.connect(
+    '/Users/leejunhee/FastCampus/python_basic/resource/records.db', isolation_level=None)
+
+# Cursor 연결
+
+cursor = conn.cursor()
+
+# 테이블 생성
+
+cursor.execute(
+    "CREATE TABLE IF NOT EXISTS records( id INTEGER PRIMARY KEY AUTOINCREMENT, cor_cnt INTEGER, record text, regdate text)")
+
+
+words = []      # 영어 단어 리스트(1000개 로드)
+
+n = 1           # 게임 시도 횟수
+cor_cnt = 0     # 정답 개수
+
+with open('./resource/word.txt', 'r') as f:
+    for c in f:
+        words.append(c.strip())
+
+# print(words)    # 단어 리스트 확인
+
+input("Ready? Press Enter Key!")  # Enter Game Start!
+
+start = time.time()  # 시작한 시간 (Start time)
+
+while n <= 5:
+    random.shuffle(words)  # words 단어를 섞는다
+    q = random.choice(words)  # 뽑아와서 q 에 할당한다
+
+    print()
+
+    print("*Question # {}".format(n))
+    print(q)      # 문제 출력
+
+    x = input()   # 타이핑 입력
+
+    print()
+
+    if str(q).strip() == str(x).strip():
+        print('Pass!')
+        cor_cnt += 1
+        # 정답 소리 재생
+        soundaGood.play()
+    else:
+        print('Wrong!')
+        # 오답 소리 재생
+        soundaBad.play()
+    n += 1
+
+end = time.time()       # 끝난 시간 End Time
+et = end - start        # 총 게임 시간
+et = format(et, ".3f")  # 소숫점 세번째 자리까지 출력
+
+if cor_cnt >= 3:
+    print('합격')
+else:
+    print('불합격')
+
+# 기록 DB 삽입
+
+cursor.execute("INSERT INTO records('cor_cnt','record','regdate') VALUES (?,?,?)",
+               (cor_cnt, et, datetime.datetime.now().strftime('%Y-%m=%d %H:%M:%S')))
+
+# 수행 시간 출력
+print('게임 시간:', et, "초", "정답 개수 : {}".format(cor_cnt))
+
+# 시작 지점
+if __name__ == '__main__':
+    pass
+
+```
+
+# 파이썬 참조 심화
+
+- 파이썬 객체 참조 다양한 특징
+- Copy
+- Deep Copy
+- 매개변수 전달 주의할 점
+
+```py
+# Section14-1
+# 파이썬 심화
+# 객체 참조 중요한 특징들
+
+# Python Object Reference
+
+import copy  # Deep Copy를 위해 사용할 copy 모듈
+
+print('EX1-1 -')
+print(dir())  # directory, 현재 스코프에 위치한 환경을 보여줌
+
+print()
+
+# id vs __eq__ (== 같다 표시) 증명
+# 객체 비교
+
+x = {'name': 'kim', 'age': 33, 'city': 'Seoul'}
+y = x
+
+print('EX2-1 -', id(x), id(y))
+# >>> EX2-1 - 4335567680 4335567680
+
+print('EX2-1 -', id(x.get('name')), id(y.get('name')))
+# >>> EX2-1 - 4502354544 4502354544
+
+# why?
+# 객체의 경우 불변성의 특징을 가지는 원시 타입과 달리, 변하는 가변성의 성질을 가지고 있다.
+# 만약 객체가 참조하는 메모리의 주소가 아닌 실제 값을 가지고 있다면, 객체 내부의 값이 변할 때마다 재할당해야 하므로 비용이 많이 든다
+
+# 따라서 객체는 얕은 복사(shallow)를 통해 id 값에 메모리 주소를 참조하고 있다.
+# 만약 같은 메모리 주소를 참조하고 있는 객체 내부의 데이터를 변경하면 어떻게 될까?
+
+x['name'] = 'lee'
+
+# 객체는 객체를 할당한 변수(x)가 기억하는 메모리 주소를 통해 메모리 공간에 접근하여 참조 값에 접근할 수 있다.
+# 객체는 변경 불가능한 값이 아니므로, 재할당하지 않더라도 객체를 직접 변경할 수 있다.
+# 객체를 삽입 수정 삭제 하더라도 메모리 주소가 변경되지 않는다는 것을 의미한다
+
+print('EX2-2 -', 'x:', x, 'y:', y)
+# >>> EX2-2 - x: {'name': 'lee', 'age': 33, 'city': 'Seoul'} y: {'name': 'lee', 'age': 33, 'city': 'Seoul'}
+print('EX2-2 -', id(x), id(y))
+# >>> EX2-2 - 4417651520 4417651520 , 앞서 EX2-1에서 확인했던 x,y의 id값 즉 메모리 주소가 변경되지 않았음을 알 수 있다
+
+# 원시 타입에 대해 생각해보자
+# 원시 타입의 경우 불변성(변하지 않는 성질)을 가진다
+# 따라서 한번 선언된 기존 메모리에 존재하는 값을 변경할 수 없기 때문에, 재할당을 통해 새로운 주소에 값을 할당한다
+
+str1 = 'lee'
+str2 = str1
+
+print('EX2-3 -', id(str1), id(str2))
+# EX2-3 - 4320787440 4320787440
+
+# str1에 'kim'이라는 문자열을 재할당한다면 str2도 'kim'을 참조할까?
+# 객체와 같은 구조(가변성)라면 같은 주소를 가리키고 것이다
+str1 = 'kim'
+
+print('EX2-4 -', str1, str2)
+print('EX2-4 -', id(str1), id(str2))
+# EX2-4 - kim lee
+# EX2-4 - 4376099440 4376345584
+
+# 아니다, 문자열과 같은 원시 값의 경우 변경 불가능한 값이기 때문에 값을 직접 변경할 수 없다.
+# 따라서 변수 값을 변경하기 위해 원시 값을 재할당(kim) 하면, 새로운 메모리 공간을 확보하고 재할당한 값을 저장한다
+# 그렇기 때문에 참조하던 메모리 공간의 주소(id)가 변경된다 4320787440 > 4376345584
+
+# 객체 생성 후 완전 불변 -> 즉, id는 객체 주소(정체성)비교, ==(__eq__)는 값을 비교한다
+
+print()
+print()
+
+# 튜플 불변형의 비교 (파이썬의 튜플은 불변성의 성질을 갖는다.)
+
+tuple1 = (10, 15, [100, 1000])
+tuple2 = (10, 15, [100, 1000])
+
+print('EX3-1 -', id(tuple1), id(tuple2))
+# >>> EX3-1 - 4361677760 4361677504
+print('EX3-2 -', tuple1 is tuple2)  # 객체 주소(id) 비교
+# >>> EX3-2 - False
+print('EX3-3 -', tuple1 == tuple2)  # 값 비교
+# >>> EX3-3 - True
+print('EX3-4 -', tuple1.__eq__(tuple2))
+# >>> EX3-4 - True
+
+print()
+print()
+
+# Copy, Deepcopy(얕은 복사, 깊은 복사)
+
+# Copy
+tl1 = [10, [100, 105], (5, 10, 15)]
+tl2 = tl1
+tl3 = list(tl1)
+
+print('EX4-1 -', tl1 == tl2)
+print('EX4-2 -', tl1 is tl2)
+print('EX4-3 -', tl1 == tl3)
+print('EX4-2 -', tl1 is tl3)
+
+# EX4-1 - True
+# EX4-2 - True
+# EX4-3 - True
+# EX4-2 - False
+
+print()
+
+# 증명
+tl1.append(1000)
+tl1[1].remove(105)
+
+print('EX4-5 -', tl1)
+print('EX4-6 -', tl2)
+print('EX4-7 -', tl3)
+print('external:', id(tl1[2]))
+
+print()
+
+tl1[1] += [110, 120]
+tl1[2] += (110, 120)
+
+
+print('EX4-8 -', tl1)
+print('EX4-9 -', tl2)  # 튜플 재 할당(객체가 새로 생성됨, 메모리 주소가 변경됨)
+print('EX4-10 -', tl3)
+print('after:', id(tl1[2]))
+
+print()
+print()
+
+# Deep Copy
+
+# 장바구니
+
+
+class Basket():
+    def __init__(self, products=None):
+        if products is None:
+            self._products = []
+        else:
+            self._products = list(products)
+
+    def put_prod(self, prod_name):
+        self._products.append(prod_name)
+
+    def del_prod(self, prod_name):
+        self._products.remove(prod_name)
+
+# import copy
+
+
+basket1 = Basket(['Apple', 'Bag', 'TV', 'Snack', 'Water'])
+basket2 = copy.copy(basket1)      # 복사
+basket3 = copy.deepcopy(basket1)  # 깊은 복사
+
+print('EX5-1 -', id(basket1), id(basket2), id(basket3))
+# >>> EX5-1 - 4318378352 4318377392 4318368128
+
+print('EX5-2 -', id(basket1._products),
+      id(basket2._products), id(basket3._products))
+# >>> EX5-2 - 4345866816 4345866816 4345866688
+
+# deep copy로 복사하지 않을 경우, 내부의 가리키는 데이터의 주소가 동일하다
+# 그말인 즉, basket1의 Item을 변경하면, basket2의 Item이 변경될 수 있다는 의미이다
+# 따라서 깊은 복사를 통해 객체가 동일한 메모리 주소를 참조하지 않도록 만들어줘야 한다
+
+print()
+
+# 증명
+# 첫 번째 바구니는 오렌지를 넣고, 두 번째 바구니는 Snack을 빼고 싶은 경우
+
+basket1.put_prod('Orange')
+basket2.del_prod('Snack')
+
+print('EX5-3 -', basket1._products)
+print('EX5-4 -', basket2._products)
+print('EX5-5 -', basket3._products)
+
+print()
+print()
+
+# 함수 매개변수 전달 사용법
+
+
+def mul(x, y):
+    x += y
+    return x
+
+
+x = 10
+y = 5
+
+
+print('EX6-1 -', mul(10, 5), x, y)
+# >>> EX6-1 - 15 10 5
+print()
+
+a = [10, 100]
+b = [5, 10]
+
+print('EX6-2 -', mul(a, b), a, b)  # 가변형 a -> 원본 데이터 변경
+# >>> EX6-2 - [10, 100, 5, 10] [10, 100, 5, 10] [5, 10]
+# 원본 데이터 리스트 a 또한 변경된 상황
+
+c = (10, 100)
+d = (5, 10)
+
+print('EX6-3 -', mul(c, d), c, d)  # 불변형 c -> 원본 데이터 변경 x
+# >>> EX6-3 - (10, 100, 5, 10) (10, 100) (5, 10)
+
+print()
+print()
+
+# 파이썬 불변형 예외
+# str, bytes, frozenset, Tuple : 사본 생성 x -> 참조 반환
+# 어떻게 복사를 하던 하나의 id 값을 갖는다
+
+tt1 = (1, 2, 3, 4, 5)
+tt2 = tuple(tt1)
+tt3 = tt1[:]
+
+print('EX7-1 -', tt1 is tt2, id(tt1), id(tt2))
+print('EX7-2 -', tt1 is tt3, id(tt1), id(tt3))
+
+tt4 = (10, 20, 30, 40, 50)
+tt5 = (10, 20, 30, 40, 50)
+ss1 = 'Apple'
+ss2 = 'Apple'
+ss3 = ss1
+
+
+print('EX7-3 -', tt4 is tt5, tt4 == tt5, id(tt4), id(tt5))
+print('EX7-4 -', ss1 is ss2, ss1 == ss2, id(ss1), id(ss2))
+print('EX7-5 -', ss1 is ss3, ss1 == ss3, id(ss1), id(ss3))
+
+ss1 = 'Orange'
+
+print('EX7-6 -', ss1 is ss2, ss1 == ss2, id(ss1), id(ss2))
+print('EX7-7 -', ss1 is ss3, ss1 == ss3, id(ss1), id(ss3))
+
+```

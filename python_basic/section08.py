@@ -11,13 +11,17 @@
 # . : 현재 디렉토리
 
 # 사용1, 클래스 형태 내부에 함수가 있을 때
+# 클래스를 불러와야 하는 경우 (ex: import Fibonacci)
+# from 문을 통해 해당 클래스의 위치를 기입해줘야 한다! 🔥
 
+# from math_pkg.fibonacci import Fibonacci
 
 import builtins
 import math_pkg.prints as p
-from math_pkg.fibonaccit import Fibonacci
-from math_pkg.fibonaccit import Fibonacci as fb
 import math_pkg.calculations as c
+
+from math_pkg.fibonacci import Fibonacci
+from math_pkg.fibonacci import Fibonacci as fb
 from math_pkg.calculations import div as d
 
 print("ex1 :", end='')
