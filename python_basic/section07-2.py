@@ -26,7 +26,11 @@ class BmwCar(Car):
     """Sub Class"""
 
     def __init__(self, car_name, type, color):
-        super().__init__(type, color)  # super() 부모에게 상속받은 type, color라는 의미
+        # super() 부모에게 상속받은 type, color라는 의미
+        # 인스턴스 > BmwCar 클래스 > Car 클래스로 전달되는 상황이다
+        # car_name을 제외한 type과 color는 재사용을 위해서 Car 클래스로부터 상속받고 있는 상황이므로
+        # 인스턴스 생성 시에 넘겨받은 인수를 super(), 부모에게 넘겨준다
+        super().__init__(type, color)
         self.car_name = car_name
 
     def show_model(self) -> None:
@@ -37,7 +41,8 @@ class BenzCar(Car):
     """Sub Class"""
 
     def __init__(self, car_name, type, color):
-        super().__init__(type, color)  # super() 부모에게 상속받은 type, color라는 의미
+        # super() 부모에게 상속받은 type, color라는 의미
+        super().__init__(type, color)
         self.car_name = car_name
 
     def show_model(self) -> None:
@@ -78,7 +83,10 @@ print(model1.__dict__)
 model2 = BenzCar('220d', 'suv', 'black')
 
 print(model1.show())  # Car Class "Show Method!"
-print(model2.show())  # Car Info : 220d suv black
+print(model2.show())
+# 부모 클래스의 show 메서드도 동시에 출력 >>> print(super().show())
+# Car Class "Show Method!"
+# Car Info : 220d suv black
 
 print()
 

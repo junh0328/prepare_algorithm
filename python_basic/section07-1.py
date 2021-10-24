@@ -11,6 +11,7 @@
 # 인스턴스 변수 : 객체마다 별도로 존재, 인스턴스 생성 후에 사용, 각각이 개인적으로 가짐
 
 # 선언
+
 # class 클래스명:
 #     함수
 #     함수1
@@ -21,11 +22,14 @@
 # 첫글자가 대문자로 시작하는 것을 원칙으로 함
 # 단어와 단어 사이에는 대문자로 구분
 
+# 초기화
 class UserInfo:
-    # 속성(프로퍼티), 메서드
-    # __init__ 을 통해 초기화를 헤야 한다
+    # ① 속성(프로퍼티), ② 메서드로 구분된다
+    # 1. __init__ 을 통해 초기화를 헤야 한다
+    #
     def __init__(self, name):
         self.name = name
+        print('초기화!')
 
     def user_info_p(self):
         print("Name:", self.name)
@@ -62,6 +66,7 @@ class Parent:
     def function1():
         print('non self function called!')
 
+    # self가 있을 경우
     def function2(self):
         print(id(self))
         print('self function called!')
@@ -76,6 +81,9 @@ child = Parent()
 Parent.function1()
 
 child.function2()
+
+print('---------------', Parent.function1)
+
 
 print(id(child))
 
@@ -93,6 +101,7 @@ class WareHouse:
 
     def __init__(self, name):
         self.name = name
+        # 클래스 변수는 self가 없기 때문에 클래스 명을 통해 직접 접근해야 한다
         WareHouse.stock_num += 1
 
     def __del__(self):
@@ -111,6 +120,7 @@ print()
 
 print(WareHouse.__dict__)
 # ... 'stock_num': 3, 클래스 변수는 사용자 모두가 공유하기 때문에, init(초기화)한 멤버 수만큼 증가하여 3이 되었다
+print('stock_num:', WareHouse.stock_num)  # >>> 3
 
 print()
 
@@ -120,7 +130,8 @@ print(user3.name)
 
 print()
 
-# 자기 네임 스페이스에 없다면 클래스 네임스페이스에서 찾는다
+# 🔥 중요 🔥
+# 자기 네임 스페이스에 해당 변수가 없다면 클래스 네임스페이스에서 찾는다
 # 클래스 네임스페이스에도 없다면 에러를 발생시킨다
 
 print(user1.stock_num)  # 3
