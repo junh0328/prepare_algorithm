@@ -505,3 +505,438 @@ print('stack_list', stack_list)
 # >>> stack_list [0, 1, 2, 3, 4, 5, 6, 7, 8]
 
 ```
+
+## 2021.10.27, day 14
+
+### `[자료구조]` 링크드 리스트 Linked list
+
+#### 꼭 알아둬야 할 자료 구조: 링크드 리스트 (Linked list)
+
+### 1. 링크드 리스트 (Linked List) 구조
+
+- 연결 리스트라고도 함
+- 배열은 순차적으로 연결된 공간에 데이터를 나열하는 데이터 구조
+- 링크드 리스트는 떨어진 곳에 존재하는 데이터를 화살표로 연결해서 관리하는 데이터 구조
+- <font color='#BF360C'>본래 C언어에서는 주요한 데이터 구조이지만, 파이썬은 리스트 타입이 링크드 리스트의 기능을 모두 지원</font>
+
+**링크드 리스트 기본 구조와 용어**
+
+- 노드(Node): 데이터 저장 단위 (데이터값, 포인터) 로 구성
+- 포인터(pointer): 각 노드 안에서, 다음이나 이전의 노드와의 연결 정보를 가지고 있는 공간
+
+- 일반적인 링크드 리스트 형태
+
+  <img src="https://www.fun-coding.org/00_Images/linkedlist.png" />
+
+  (출처: wikipedia, https://en.wikipedia.org/wiki/Linked_list)
+
+### 2. 간단한 링크드 리스트 예
+
+#### Node 구현
+
+- 보통 파이썬에서 링크드 리스트 구현시, 파이썬 클래스를 활용함
+- 파이썬 객체지향 문법 이해 필요
+
+```py
+class Node:
+    def __init__(self, data, next=None):
+        self.data = data
+        self.next = next
+```
+
+#### Node와 Node 연결하기 (포인터 활용)
+
+```py
+node1 = Node(1)
+node2 = Node(2)
+node1.next = node2
+head = node1
+```
+
+#### 링크드 리스트로 데이터 추가하기
+
+```py
+class Node:
+    def __init__(self, data, next=None):
+        self.data = data
+        self.next = next
+
+def add(data):
+    node = head
+    while node.next:
+        node = node.next
+    node.next = Node(data)
+
+...
+node1 = Node(1)
+head = node1
+
+for index in range(2,10):
+    add(index)
+
+...
+
+node = head
+while node.next:
+    print(node.data)
+    node = node.next
+print (node.data)
+```
+
+```
+>>>
+1
+2
+3
+4
+5
+6
+7
+8
+9
+```
+
+### 3. 링크드 리스트의 장단점 (전통적인 C언어에서의 배열과 링크드 리스트)
+
+- 장점
+
+  - 미리 데이터 공간을 할당하지 않아도 된다
+  - <-> 배열은 미리 데이터 공간을 할당해야 함
+
+- 단점
+
+  - 연결을 위한 별도 데이터 공간이 필요하므로, 저장 공간 효율이 높지 않음
+  - 연결 정보를 찾는 시간이 필요하므로 접근 속도가 느림
+  - 중간 데이터 삭제시, 앞뒤 데이터의 연결을 재구성해야 하는 부가적인 작업 필요
+
+### 4. 링크드 리스트의 복잡한 기능1 (링크드 리스트 데이터 사이에 데이터를 추가)
+
+- 링크드 리스트는 유지 관리에 부가적인 구현이 필요함
+
+<img src="https://www.fun-coding.org/00_Images/linkedlistadd.png" />
+
+(출처: wikipedia, https://en.wikipedia.org/wiki/Linked_list)
+
+<details>
+<summary>링크드 리스트 데이터 사이에 데이터를 추가</summary>
+
+```py
+# 노드 객체
+
+# 노드 : 데이터 저장 단위 (데이터 값, 포인터로 구성)
+# 포인터 : 각 노드 안에서, 다음이나 이전의 노드와의 연결 정보를 가지고 있는 공간
+
+class Node:
+    def __init__(self, data, next=None):
+        self.data = data
+        self.next = next
+
+
+def add(data):
+    node = head
+    while node.next:
+        node = node.next
+    node.next = Node(data)
+
+
+node1 = Node(1)
+
+node1 = Node(1)
+head = node1
+for index in range(2, 10):
+    add(index)
+
+node = head  # node1이 Head다
+while node.next:
+    print(node.data)
+    node = node.next
+print('no more head', node.data)
+
+print()
+
+# -----------------------------------------------------------
+
+# 링크드 리스트의 복잡한 기능 1 (링크드 리스트 데이터 사이에 데이터를 추가하기)
+
+node3 = Node(1.5)
+
+print(node3.data)  # >>> 1.5
+print(node3.next)  # >>> None, why? 아직 어디 부분에 연결할지 정해주지 않았으므로 독립적으로 존재한다
+
+print()
+
+print('head.data:', head.data)  # >>> head는 1 즉, node1을 가리키고 있는 상황
+
+node = head
+search = True
+while search:
+    if node.data == 1:
+        search = False
+    else:
+        node = node.next
+
+print()
+
+print('node.__dict__:', node.__dict__)
+# >>> node.__dict__: {'data': 1, 'next': <__main__.Node object at 0x11030ffd0>}
+# next에 들어있는 주소 (0x11030ffd0) 가 node의 포인터가 가리키는 데이터 (2)의 주소이다
+
+print('node.next__dict__:', node.next.__dict__)
+# >>> node.next__dict__: {'data': 2, 'next': <__main__.Node object at 0x11030fe50>}
+# node.next에는 당연히 포인터가 가리키고 있는 노드의 데이터인 2가 들어있다
+
+
+# 기존 node가 다음(next) 포인터로 가지고 있을 주소를 node_next에 저장한다
+node_next = node.next
+
+# 새로 만든 node3 인스턴스를 node.next에 할당한다
+node.next = node3
+
+# 기존 node가 가리키는 다음 포인터, node_next를 node3 인스턴스의 포인터로 할당한다
+node3.next = node_next
+
+node = head
+while node.next:
+    print(node.data)
+    node = node.next
+print(node.data)
+
+```
+
+</details>
+
+### 5. 파이썬 객체지향 프로그래밍으로 링크드 리스트 구현하기
+
+<details>
+<summary>파이썬 객체지향 프로그래밍으로 링크드 리스트 구현하기</summary>
+
+```py
+# 파이썬 객체지향 프로그래밍으로 링크드 리스트 구현하기
+
+class Node:
+    def __init__(self, data, next=None):
+        self.data = data
+        self.next = next
+
+
+class NodeManagement:
+    def __init__(self, data):
+        self.head = Node(data)
+
+    def add(self, data):
+        if self.head == '':
+            self.head = Node(data)
+        else:
+            node = self.head
+            while node.next:
+                node = node.next
+            node.next = Node(data)
+
+    def desc(self):
+        node = self.head
+        while node:
+            print('data:', node.data, '/', 'next:', node.next)
+            node = node.next
+
+
+linkedList1 = NodeManagement(0)
+
+print('linkedList1.__dict__:', linkedList1.__dict__)
+# >>> linkedList1.__dict__: {'head': <__main__.Node object at 0x10a51b070>}
+
+print('linkedList1.head:', linkedList1.head)
+# >>> linkedList1.head: <__main__.Node object at 0x10a51b070>
+
+print('linkedList1.head.data:', linkedList1.head.data)
+# >>> linkedList1.head.data: 0
+
+print('linkedList1.head.next:', linkedList1.head.next)
+# >>> linkedList1.head.next: None
+
+print()
+
+for data in range(1, 11):
+    linkedList1.add(data)
+
+linkedList1.desc()
+```
+
+</details>
+
+### 6. 링크드 리스트의 복잡한 기능2 (특정 노드를 삭제)
+
+<details>
+<summary>링크드 리스트의 복잡한 기능2 (특정 노드를 삭제)</summary>
+
+```py
+# 링크드 리스트의 복잡한 기능2 (특정 노드를 삭제)
+
+# 노드를 삭제하는 경우는 크게 3가지로 볼 수 있다
+
+# 1. head 삭제
+# 2. 마지막 노드 삭제
+# 3. 중간 노드 삭제
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+# NodeManagement 클래스를 통해 인스턴스를 생성할 경우
+# 자동으로 해당 data를 가진 변수가 head(우리가 정한 제일 앞에 있는 리스트)가 된다
+
+
+class NodeManagement:
+    def __init__(self, data):
+        # Node 클래스에 해당 data를 넣어주고, 이렇게 만든 인스턴스를 head로 만든다
+        self.head = Node(data)
+
+    def add(self, data):
+        if self.head == '':
+            self.head = Node(data)
+        else:
+            node = self.head
+            # 헤더로 선택된 노드의 next가 None이 될 때까지 (node.next가 있을 때까지)
+            while node.next:
+                # 다음 노드와 헤더를 연결해준다
+                node = node.next
+            # 다음 노드에 데이터를 추가한다
+            node.next = Node(data)
+            print('node:', node.__dict__)
+            print('next:', node.next)
+            print()
+
+    def desc(self):
+        node = self.head
+        while node:
+            print('node.data:', node.data)
+            node = node.next
+
+    def delete(self, data):
+        if self.head == '':
+            print('해당 값을 가진 노드가 없습니다.')
+            return
+
+        # head (제일 선행 노드)를 삭제하는 경우
+        # >>> 그 다음 노드(node.next)를 head로 만들어줘야 한다
+
+        # 너가 삭제하려고 입력한 data가 head(제일 선행)의 data와 같니?
+        if self.head.data == data:
+            # 선행 데이터의 head를 임시 temp 변수에 저장
+            temp = self.head
+            # 선행 데이터의 다음 데이터를 기존 선행 데이터에 재할당
+            self.head = self.head.next
+            # 기존 선행 데이터의 head 삭제
+            del temp
+
+        # 중간 또는 맨뒤의 노드를 삭제하려는 경우
+        # 너가 삭제하려고 입력한 data가 head(제일 선행)의 data와 다르니?
+        else:
+            # node라는 변수에 선행 데이터를 저장
+            node = self.head
+            # 헤더로 선택된 노드의 next가 None이 될 때까지 (node.next가 있을 때까지)
+            while node.next:
+                # 중간 노드를 삭제하는 경우
+                if node.next.data == data:
+                    temp = node.next
+                    node.next = node.next.next
+                    print('node.next.__dict__:', node.next.__dict__)
+                    print('node.next.next.__dict__:', node.next.next.__dict__)
+                    print('temp.__dict__:', temp.__dict__)
+                    del temp
+                    return
+                else:
+                    node = node.next
+
+
+node1 = NodeManagement(1)
+
+print('node1.__dict__:', node1.__dict__)
+# >>> node1.__dict__: {'head': <__main__.Node object at 0x10270be80>}
+print('node1.head.data:', node1.head.data)
+# >>> node1.head.data: 1
+print('node1.head.next:', node1.head.next)
+# >>> node1.head.next: None
+
+print()
+print()
+
+for item in range(2, 11):
+    node1.add(item)
+
+# node: {'data': 1, 'next': <__main__.Node object at 0x1019f3df0>}
+# next: <__main__.Node object at 0x1019f3df0>
+#
+# node: {'data': 2, 'next': <__main__.Node object at 0x1019f3d60>}
+# next: <__main__.Node object at 0x1019f3d60>
+#
+# node: {'data': 3, 'next': <__main__.Node object at 0x1019f3d00>}
+# next: <__main__.Node object at 0x1019f3d00>
+#
+# node: {'data': 4, 'next': <__main__.Node object at 0x1019f3ca0>}
+# next: <__main__.Node object at 0x1019f3ca0>
+#
+# node: {'data': 5, 'next': <__main__.Node object at 0x1019f3c40>}
+# next: <__main__.Node object at 0x1019f3c40>
+#
+# node: {'data': 6, 'next': <__main__.Node object at 0x1019f3be0>}
+# next: <__main__.Node object at 0x1019f3be0>
+#
+# node: {'data': 7, 'next': <__main__.Node object at 0x1019f3b80>}
+# next: <__main__.Node object at 0x1019f3b80>
+#
+# node: {'data': 8, 'next': <__main__.Node object at 0x1019f3b20>}
+# next: <__main__.Node object at 0x1019f3b20>
+#
+# node: {'data': 9, 'next': <__main__.Node object at 0x1019f3ac0>}
+# next: <__main__.Node object at 0x1019f3ac0>
+
+node1.desc()
+
+# node.data: 1
+# node.data: 2
+# node.data: 3
+# node.data: 4
+# node.data: 5
+# node.data: 6
+# node.data: 7
+# node.data: 8
+# node.data: 9
+# node.data: 10
+
+print()
+print()
+
+node1.delete(3)
+# node.next.__dict__: {'data': 4, 'next': <__main__.Node object at 0x1101cfc70>}
+# node.next.next.__dict__: {'data': 5, 'next': <__main__.Node object at 0x1101cfc10>}
+# temp.__dict__: {'data': 3, 'next': <__main__.Node object at 0x1101cfcd0>}
+
+print()
+print()
+
+node1.desc()
+
+# node.data: 1
+# node.data: 2
+# node.data: 4
+# node.data: 5
+# node.data: 6
+# node.data: 7
+# node.data: 8
+# node.data: 9
+# node.data: 10
+
+```
+
+</details>
+
+### 7. 다양한 링크드 리스트 구조
+
+- 더블 링크드 리스트(Doubly linked list) 기본 구조
+
+  - 이중 연결 리스트라고도 함
+  - 장점: 양방향으로 연결되어 있어서 노드 탐색이 양쪽으로 모두 가능
+
+    <img src="https://www.fun-coding.org/00_Images/doublelinkedlist.png" />
+    (출처: wikipedia, https://en.wikipedia.org/wiki/Linked_list)
