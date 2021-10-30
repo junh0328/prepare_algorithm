@@ -19,6 +19,7 @@ class NodeManagement:
     def __init__(self, data):
         # Node 클래스에 해당 data를 넣어주고, 이렇게 만든 인스턴스를 head로 만든다
         self.head = Node(data)
+        print('initialize self.head:', self.head)
 
     def add(self, data):
         if self.head == '':
@@ -79,6 +80,9 @@ class NodeManagement:
 
 
 node1 = NodeManagement(1)
+
+print()
+print()
 
 print('node1.__dict__:', node1.__dict__)
 # >>> node1.__dict__: {'head': <__main__.Node object at 0x10270be80>}

@@ -72,8 +72,23 @@ node.next = node3
 # 기존 node가 가리키는 다음 포인터, node_next를 node3 인스턴스의 포인터로 할당한다
 node3.next = node_next
 
+
+print()
+
+# head는 위에서 선언했던 node1 인스턴스를 가리킨다
 node = head
 while node.next:
     print(node.data)
     node = node.next
-print(node.data)
+print('end of node.data:', node.data)
+
+# 1
+# 1.5
+# 2
+# 3
+# 4
+# 5
+# 6
+# 7
+# 8
+# end of node.data: 9

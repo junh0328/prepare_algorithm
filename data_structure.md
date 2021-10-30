@@ -695,11 +695,26 @@ node.next = node3
 # 기존 node가 가리키는 다음 포인터, node_next를 node3 인스턴스의 포인터로 할당한다
 node3.next = node_next
 
+
+print()
+
+# head는 위에서 선언했던 node1 인스턴스를 가리킨다
 node = head
 while node.next:
     print(node.data)
     node = node.next
-print(node.data)
+print('end of node.data:', node.data)
+
+# 1
+# 1.5
+# 2
+# 3
+# 4
+# 5
+# 6
+# 7
+# 8
+# end of node.data: 9
 
 ```
 
@@ -931,12 +946,267 @@ node1.desc()
 
 </details>
 
+## 2021.10.29, day 15
+
 ### 7. 다양한 링크드 리스트 구조
 
 - 더블 링크드 리스트(Doubly linked list) 기본 구조
 
+  - 단방향 링크드 리스트의 경우 반드시 우리가 설정한 head 차례로 데이터를 찾아갔음
+  - 더블 링크드 리스트는 앞 뒤 방향 모두 노드 탐색이 가능함
   - 이중 연결 리스트라고도 함
   - 장점: 양방향으로 연결되어 있어서 노드 탐색이 양쪽으로 모두 가능
 
     <img src="https://www.fun-coding.org/00_Images/doublelinkedlist.png" />
     (출처: wikipedia, https://en.wikipedia.org/wiki/Linked_list)
+
+<details>
+<summary>기본 예제 코드 보기 (맨 뒤에 삽입 이후 출력)</summary>
+
+```py
+# 더블 링크드 리스트
+class Node:
+    def __init__(self, data, prev=None, next=None):
+        self.prev = prev
+        self.data = data
+        self.next = next
+
+
+class NodeManagement:
+    # 초기화
+    def __init__(self, data):
+        # 기존과 같이 앞에서부터 검색하기 위함
+        self.head = Node(data)
+        print('self.head:', self.head.__dict__)
+        # 뒤에서부터 검색하기 위함
+        # 현재 기본 값으로는 self.tail = Node(data) 와 같은 의미이다
+        # 데이터가 하나일 경우에는 처음이나 끝이나 모두 같은 주소를 가리키고 있기 때문
+        self.tail = self.head
+        print('self.tail:', self.tail.__dict__)
+
+    # 삽입하기
+    # node.next 맨 뒤에 특정 노드를 생성한 후, 기존 링크드 리스트와 연결하는 메서드이다
+    def insert(self, data):
+        # 방어 코드이다.
+        # 사실 인스턴스를 생성할 때 head 와 tail은 초기화 단계에서 무조건 값이 들어 있다
+        if self.head == None:
+            self.head = Node(data)
+            self.tail = self.head
+        # head가 있는 경우, 실질적인 코드이다
+        # 추가하면서 인수로 받는 새로운 데이터(data)를 head로 설정된 인스턴스 내부의 데이터와 연결시켜야 한다
+        else:
+            # 인스턴스의 현재 head를 node라는 변수에 할당한다
+            node = self.head
+            # while 문이 true라는 것은 해당 노드의 다음 노드가 존재한다는 것을 의미한다
+            while node.next:
+                node = node.next
+            # 추가로 받는 data를 객체 형식으로 만들어 new라는 변수에 할당한다
+            # new는 insert된 data로, 새롭게 연결해야 할 노드이다
+            new = Node(data)
+            # node(=self.head)의 다음번(next)이라는 속성에 앞서 만든 new 변수의 데이터를 할당한다
+            node.next = new
+            # 새로 만든 노드도 자신의 앞에 있는 노드의 메모리 주소를 가지고 있어야 한다
+            # 또한, 더블 링크드 리스트이므로 새로 만든 변수 앞에는 기존 head를 삽입한다
+            new.prev = node
+            # 꼬리에는 객체형식의 새로운 data (new = Node(data))를 할당한다
+            self.tail = new
+
+    # 출력하기
+    def desc(self):
+        node = self.head
+        print('self.head is:', self.head.__dict__)
+        # >>> self.head is: {'prev': None, 'data': 1, 'next': <__main__.Node object at 0x109847e20>}
+        while node:
+            print('node.prev:', node.prev)
+            print('node.data:', node.data)
+            print('node.next:', node.next)
+            print()
+            node = node.next
+
+
+node1 = NodeManagement(1)
+
+for index in range(2, 11):
+    node1.insert(index)
+
+node1.desc()
+
+# node.prev: None
+# node.data: 1
+# node.next: <__main__.Node object at 0x10e443e20>
+#
+# node.prev: <__main__.Node object at 0x10e443eb0>
+# node.data: 2
+# node.next: <__main__.Node object at 0x10e443d90>
+#
+# node.prev: <__main__.Node object at 0x10e443e20>
+# node.data: 3
+# node.next: <__main__.Node object at 0x10e443d30>
+#
+# node.prev: <__main__.Node object at 0x10e443d90>
+# node.data: 4
+# node.next: <__main__.Node object at 0x10e443cd0>
+#
+# node.prev: <__main__.Node object at 0x10e443d30>
+# node.data: 5
+# node.next: <__main__.Node object at 0x10e443c70>
+#
+# node.prev: <__main__.Node object at 0x10e443cd0>
+# node.data: 6
+# node.next: <__main__.Node object at 0x10e443c10>
+#
+# node.prev: <__main__.Node object at 0x10e443c70>
+# node.data: 7
+# node.next: <__main__.Node object at 0x10e443bb0>
+#
+# node.prev: <__main__.Node object at 0x10e443c10>
+# node.data: 8
+# node.next: <__main__.Node object at 0x10e443b50>
+#
+# node.prev: <__main__.Node object at 0x10e443bb0>
+# node.data: 9
+# node.next: <__main__.Node object at 0x10e443af0>
+#
+# node.prev: <__main__.Node object at 0x10e443b50>
+# node.data: 10
+# node.next: None
+
+```
+
+</details>
+
+<details>
+<summary>추가 예제 코드(search_from_head/search_from_tail/insert_before)</summary>
+
+<img src="./images/insert_before.png" alt="inser_before">
+
+```py
+# 추가 예제 코드
+# search_from_head
+# search_from_tail
+# insert_before
+
+class Node:
+    def __init__(self, data, prev=None, next=None):
+        self.prev = prev
+        self.data = data
+        self.next = next
+
+
+class NodeManageMent:
+    def __init__(self, data):
+        # 인스턴스 초기화시에는 아직 연결된 노드들이 없으므로, head 와 tail 모두 인스턴스 본인을 가리키도록 만든다
+        self.head = Node(data)
+        self.tail = self.head
+
+    # 맨 뒤 노드에 더블 링크드 리스트 추가
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+            self.tail = self.head
+        else:
+            # 기존 head를 node 변수에 할당한다
+            node = self.head
+            # 링크드 리스트의 맨끝까지 도달하기 위함
+            while node.next:
+                node = node.next
+            # 새로 추가할 data 객체를 new라는 변수에 할당
+            new = Node(data)
+            # 기존 링크드 리스트의 맨 마지막에 new를 링크 1(바인딩)
+            node.next = new
+            # 새로 추가할 data 객체의 앞에도 기존의 마지막 노드를 링크 2(바인딩)
+            new.prev = node
+            # 기존 링크드 리스트의 꼬리를 새로 추가할 data 객체로 바인딩
+            self.tail = new
+
+    def desc(self):
+        # 어디서부터 내려올 지 기준을 잡는다
+        # 기준은 head
+        node = self.head
+        while node.next:
+            print('node.data:', node.data)
+            node = node.next
+
+    def search_from_head(self, data):
+        if self.head == None:
+            return False
+
+        # node 변수를 통해 방향 명시
+        node = self.head
+        while node:
+            if node.data == data:
+                return node.data
+            else:
+                node = node.next
+        return False
+
+    def search_from_tail(self, data):
+        if self.tail == None:
+            return False
+
+        # node 변수를 통해 방향 명시
+        node = self.tail
+        while node:
+            if node.data == data:
+                return node.data
+            else:
+                node = node.prev
+        return False
+
+    # data >> 삽입할 데이터
+    # existing_data >>> 기존의 데이터
+    # existing_data 앞에 data를 삽입할 것이다
+    def insert_before(self, data, existing_data):
+        if self.head == None:
+            # head가 없을 경우, 노드 객체를 생성한다
+            self.head = Node(data)
+            return True
+        # head가 있을 때
+        else:
+            # 맨 뒤에서부터 데이터를 검색한다
+            node = self.tail
+            while node.data != existing_data:
+                # existing_data가 우리가 입력한 값과 맞을 때까지 앞으로 이동
+                node = node.prev
+                # 계속 앞으로 이동했을 때 결과가 None이라면 >>> data가 없는 것
+                if node == None:
+                    return False
+            # while node.data == before_data: 일 경우, (data를 정상적으로 찾은 경우)
+            # new라는 변수에 우리가 인수로 넣은 data를 객체화하여 할당
+            # 양방향 링크드 리스트이므로 새로 추가할 변수를 기준으로 prev / / next 둘다 연결해줘야 함
+            new = Node(data)
+            before_new = node.prev
+            before_new.next = new
+            # new.prev는 기존의 new (node.prev)를 가리켜야 한다
+            new.prev = before_new
+            new.next = node
+            node.prev = new
+            return True
+
+
+node1 = NodeManageMent(1)
+
+print('node1.__dict__:', node1.__dict__)
+
+print()
+print()
+
+for elem in range(2, 11):
+    node1.insert(elem)
+
+node1.desc()
+
+print()
+print()
+
+print(node1.search_from_head(2))
+
+print()
+print()
+
+# data가 2 인 노드 앞에 1.5를 가지는 노드를 삽입할꺼야
+node1.insert_before(1.5, 2)
+node1.desc()
+```
+
+</details>
