@@ -74,13 +74,13 @@ class NodeManageMent:
     # existing_data >>> 기존의 데이터
     # existing_data 앞에 data를 삽입할 것이다
     def insert_before(self, data, existing_data):
+        # head가 없을 경우, 노드 객체를 생성한다
         if self.head == None:
-            # head가 없을 경우, 노드 객체를 생성한다
             self.head = Node(data)
             return True
         # head가 있을 때
         else:
-            # 맨 뒤에서부터 데이터를 검색한다
+            # 맨 뒤에서부터 데이터를 검색한다 (앞 뒤 순서는 상관이 없다)
             node = self.tail
             while node.data != existing_data:
                 # existing_data가 우리가 입력한 값과 맞을 때까지 앞으로 이동
@@ -91,12 +91,16 @@ class NodeManageMent:
             # while node.data == before_data: 일 경우, (data를 정상적으로 찾은 경우)
             # new라는 변수에 우리가 인수로 넣은 data를 객체화하여 할당
             # 양방향 링크드 리스트이므로 새로 추가할 변수를 기준으로 prev / / next 둘다 연결해줘야 함
-            new = Node(data)
-            before_new = node.prev
-            before_new.next = new
+            # 1 과 2 사이에 1.5를 넣고 싶은 경우
+            new = Node(data)  # 1.5
+            before_new = node.prev  # before_new = 1
+            before_new.next = new  # before_new(1).next = new(1.5) 기존에는 2 였겠죠?
             # new.prev는 기존의 new (node.prev)를 가리켜야 한다
+            # new(1.5).prev = before_new(1) 새로 만든 데이터 객체 앞에도 1을 추가해줘야 겠죠?
             new.prev = before_new
+            # new(1.5).next = node(2, 뒤에서 부터 찾아왔으니 기준이 되는 데이터겠죠?)
             new.next = node
+            # node(2).prev = new (기준이 되는 데이터의 앞에도 1.5를 넣어줘야 겠죠?)
             node.prev = new
             return True
 
