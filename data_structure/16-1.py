@@ -34,10 +34,10 @@ class NodeManagement:
                 print('find Value:', value)
                 return True
             elif value < self.current_node.value:
-                print('go to left', value)
+                print('go to left', self.current_node.value)
                 self.current_node = self.current_node.left
             else:
-                print('go to right', value)
+                print('go to right', self.current_node.value)
                 self.current_node = self.current_node.right
         return False
 

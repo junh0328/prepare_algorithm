@@ -603,8 +603,8 @@ print (node.data)
   - 미리 데이터 공간을 할당하지 않아도 된다
   - <-> 배열은 미리 데이터 공간을 할당해야 함
   - 데이터를 추가 할때마다 동적으로 크기가 늘어난다
-  - 원소 검색 시 첫 번째 노드부터 마지막 노드까지 일일이 확인하기 때문에 O(n)의 시간 복잡도를 갖는다
-  - 삽입 또는 삭제 연산 시에 해당 원소를 검색한 후 삭제, 삽입 연산이 이루어지므로 O(n)의 시간 복잡도를 갖는다
+  - 원소 검색 시 **첫 번째 노드부터 마지막 노드까지 일일이 확인하기 때문에 O(n)의 시간 복잡도를 갖는다**
+  - 삽입 또는 삭제 연산 시에 **해당 원소를 검색한 후 삭제, 삽입 연산이 이루어지므로 O(n)의 시간 복잡도를 갖는다**
 
   - 즉, 삽입, 삭제가 잦은 경우 Linked List를 사용하는 것이 좋다
   - why? 배열 경우 배열의 크기를 사전에 정해줘야 하기 때문
@@ -1455,6 +1455,7 @@ def hash_func(key):
 
 ```py
 def storeHash(data, value):
+    # ord() : 문자의 ASCII 코드 리턴
     key = ord(data[0])
     hash_address = hash_func(key)
     hash_table[hash_address] = value
@@ -1465,11 +1466,35 @@ def storeHash(data, value):
 ```
 
 ```py
+data1 = 'Andy'
+data2 = 'Dave'
+data3 = 'Trump'
+data4 = 'Anthor'
+
+print (ord(data1[0]), ord(data2[0]), ord(data3[0]))
+print (ord(data1[0]), hash_func(ord(data1[0])))
+print (ord(data1[0]), ord(data4[0]))
+
+>>>
+
+65 68 84
+65 0
+65 65
+```
+
+```py
 # data: 이름, value: 전환번호
 
 storeHash('Andy', '01055553333')
 storeHash('Dave', '01044443333')
 storeHash('Trump', '01022223333')
+```
+
+```py
+print(hash_table)
+
+>>>
+# ['01055553333', 1, 2, '01044443333', '01022223333', 5, 6, 7, 8, 9]
 ```
 
 **3.4 실제 데이터 저장 및 읽기**
@@ -1514,7 +1539,7 @@ get_data('Andy')
   - **캐쉬**는 동일한 페이지를 불러오는 경우 `https://naver.com`, 변경되는 데이터 이외에는
   - 사용자의 캐쉬 메모리에 저장하여 서버로부터 불러오는 데이터의 양을 관리하기 위한 메모리이다
 
-### 5. 프로그래미이 연습
+### 5. 프로그래밍 연습
 
 > 연습1: 리스트 변수를 활용해서 해쉬 테이블 구현해보기
 
@@ -1892,10 +1917,10 @@ class NodeManagement:
                 print('find Value:', value)
                 return True
             elif value < self.current_node.value:
-                print('go to left', value)
+                print('go to left', self.current_node.value)
                 self.current_node = self.current_node.left
             else:
-                print('go to right', value)
+                print('go to right', self.current_node.value)
                 self.current_node = self.current_node.right
         return False
 
@@ -1911,6 +1936,14 @@ BST.insert(8)
 
 print(BST.search(8))
 
+>>>
+
+go to right 1
+go to right 2
+go to right 3
+go to right 4
+find Value: 8
+True
 ```
 
 </details>
@@ -1995,3 +2028,392 @@ print(BST.search(8))
 ```
 
 </details>
+
+## 2021.11.02, day 18
+
+### 5.4 이진 탐색 트리 삭제
+
+- 매우 복잡하기 때문에 경우를 나누어서 이해하는 것이 좋다
+
+#### 5.4.1 Leaf Node 삭제(자식이 없는 최하단 레벨의 자식 노드를 삭제)
+
+- 이미지 상에 19번 노드(리프 노드)를 삭제하는 경우
+- Leaf Node: Child Node가 없는 Node
+- 삭제할 Node의 Parent Node가 삭제할 Node를 가리키지 않도록 한다.
+
+<img src="https://www.fun-coding.org/00_Images/tree_remove_leaf.png" width="800" />
+
+#### 5.4.2 Child Node가 하나인 Node를 삭제 (19번의 자식 노드 1개를 가지고 있음)
+
+- 삭제할 노드의 부모(10 번) 노드가 삭제할 노드의 자식(19 번) 노드를 가리키도록 한다
+
+<img src="https://www.fun-coding.org/00_Images/tree_remove_1child.png" width="800" />
+
+#### 5.4.3 Child Node가 두 개인 Node 삭제 (3번과 6번의 자식 노드 2개를 가지고 있음)
+
+- case 1: 삭제할 노드(5) 의 **오른쪽 자식** 중, 가장 작은 값(6)을 부모 노드(10)가 가리키도록 합니다.
+- case 2: 삭제할 노드(5)의 **왼쪽 자식** 중, 가장 큰 값을(3)을 부모 노드(10)가 가리키도록 합니다
+
+<img src="https://www.fun-coding.org/00_Images/tree_remove_2child.png" width="800" />
+
+#### case 1 : 삭제할 노드(5) 의 오른쪽 자식 중, 가장 작은 값(6)을 부모 노드(10)가 가리키도록 할 경우
+
+- 삭제할 노드(5)의 오른쪽 자식 선택 (6)
+- 오른쪽 자식(6)의 가장 왼쪽에 있는 노드(6)을 선택 (이미지 상에는 6번 노드의 자식이 없기 때문)
+- 해당 노드(6)를 삭제할 노드(5)의 Parent Node(10)의 왼쪽 브랜치(left)가 가리키게 함
+- 해당 노드(6)의 왼쪽 브랜치(left)가 기존의 삭제할 노드(5)의 왼쪽 child Node(3)을 가리키게 함
+- 해당 노드(6)의 오른쪽 브랜치(right)가 기존의 삭제할 노드(5)의 오른쪽 child Node(6)을 가리키게 함 (but 이미지 상에는 6이 리프 노드임)
+
+### 5.5 이진 탐색 트리 삭제 코드 구현
+
+#### 5.5.1 삭제할 Node 탐색
+
+- 삭제할 노드가 없는 경우도 처리해야 한다
+- 이를 위해 삭제할 노드가 없는 경우는 False를 리턴하고, 함수를 종료시킨다
+
+```py
+def delete(self, value):
+        # 삭제할 노드 탐색
+        searched = False
+        self.current_node = self.head
+        self.parent = self.head
+        while self.current_node:
+            if self.current_node.value == value:
+                searched = True
+                break
+            elif value < self.current_node.value:
+                self.parent = self.current_node
+                self.current_node = self.current_node.left
+            else:
+                self.parent = self.current_node
+                self.current_node = self.current_node.right
+
+        if searched == False:
+            return False
+```
+
+- searched가 True인 경우에 조건에 따른 노드를 삭제할 수 있게 구성
+
+#### 5.5.2 Case1: 삭제할 노드가 리프 노드인 경우 (5.4.1 대응)
+
+<img src="https://www.fun-coding.org/00_Images/tree_remove_leaf_code.png" width="600" />
+
+- current_node(12 또는 19)의 자식이 있는 지 확인한다
+- 없을 경우에만 해당 로직으로 잘라낼 수 있기 때문
+- current_node의 자식 노드가 있을 경우 부모 노드와 연결해줘야 하기 때문에 다른 케이스에서 다룬다
+
+```py
+# self.current_node 가 삭제할 Node, self.parent는 삭제할 Node의 Parent Node인 상태
+if  self.current_node.left == None and self.current_node.right == None:
+    if value < self.parent.value:
+        self.parent.left = None
+    else:
+        self.parent.right = None
+    del self.current_node
+```
+
+#### 5.5.2 Case2: 삭제할 노드가 자식 노드를 한 개 가지고 있을 경우
+
+<img src="https://www.fun-coding.org/00_Images/tree_remove_1child_code.png" width="400" />
+
+- 왼쪽에 삭제할 자식이 있을 경우, current_node가 (5 or 15) 일 때 자식 노드가 각각 1개인 (3 or 12)인 경우이다
+- 오른쪽에 삭제할 자식이 있을 경우, current_node가 (5 or 15) 일 때 자식 노드가 각각 1개인 (6 or 19)인 경우이다
+
+```py
+if self.current_node.left != None and self.current_node.right == None:
+    if value < self.parent.value:
+        self.parent.left = self.current_node.left
+    else:
+        self.parent.right = self.current_node.left
+elif self.current_node.left == None and self.current_node.right != None:
+    if value < self.parent.value:
+        self.parent.left = self.current_node.right
+    else:
+        self.parent.right = self.current_node.right
+```
+
+#### 5.5.3 Case 3-1: 삭제할 노드(15)가 자식 노드를 두 개(13,18) 가지고 있을 경우 (삭제할 노드가 부모 노드 기준 왼쪽(left)에 있을 때)
+
+기본 사용 가능 전략:
+
+- 삭제할 노드(15)의 오른쪽 자식(18) 중, 가장 작은 값(16)을 삭제할 노드(15)의 부모 노드(31)이 가리키도록 한다
+- 삭제할 노드(15)의 왼쪽 자식(13) 중 가장 큰 값(14)을 삭제할 노드의 부모 노드(31)가 가리키도록 한다
+
+기본 사용 가능 전략 중, 1번 전략을 사용하여 코드를 구현하기로 함
+
+- 경우의 수가 또 다시 두 가지 있음
+
+  - case 3-1-1: 삭제할 노드(15)가 부모 노드(31)의 왼쪽에 있고, 삭제할 노드(15)의 오른쪽 자식(18) 중, 가장 작은 값을 가진 노드(16)의 자식 노드가 없을 때
+  - case 3-1-2: 삭제할 노드(15)가 부모 노드(31)의 왼쪽에 있고, 삭제할 노드(15)의 오른쪽 자식(18) 중, 가장 작은 값을 가진 노드(16)의 오른쪽에 자식 노드(17)가 있을 때
+
+    - 가장 작은 값을 가진 노드의 자식 노드가 왼쪽에 있을 경우는 없다
+    - 왜냐하면 왼쪽 노드가 있다는 것은 해당 노드보다 더 작은 값을 가진 노드가 있다는 뜻이기 때문이다
+
+```py
+if self.current_node.left != None and self.current_node.right != None: # case3
+        if value < self.parent.value: # case3-1
+            self.change_node = self.current_node.right
+            self.change_node_parent = self.current_node.right
+            while self.change_node.left != None:
+                self.change_node_parent = self.change_node
+                self.change_node = self.change_node.left
+            # 16을 기준으로 17이 존재하면 18의 왼쪽(left)에 17을 붙여야 한다
+            if self.change_node.right != None:
+                self.change_node_parent.left = self.change_node.right
+            # self.change_node.right == None: 일 경우
+            else:
+                self.change_node_parent.left = None
+            # while문 순회를 마친 뒤, 16을 current_node인 15 대신 삽입하려는 경우
+            # 31의 왼쪽에 16을 연결
+            self.parent.left = self.change_node
+            # 16의 오른쪽에 (15가 가지고 있던 자식 노드의 오른쪽)18을 연결
+            # 16의 왼쪽에 (15가 가지고 있던 자식 노드의 왼쪽) 13을 연결
+            self.change_node.right = self.current_node.right
+            self.change_node.left = self.change_node.left
+```
+
+#### 5.5.4. Case3-2: 삭제할 Node가 Child Node를 두 개 가지고 있을 경우 (삭제할 Node가 Parent Node 오른쪽에 있을 때)
+
+**부모 노드(10)를 기준으로 이번에는 부모노드의 오른쪽 자식인 15에 해당하는 노드를 삭제함**
+
+<img src="http://www.fun-coding.org/00_Images/tree_remove_2child_code_right.png" width="600" />
+
+기본 사용 가능 전략
+
+- 삭제할 노드(15)의 오른쪽 자식(18) 중, 가장 작은 값(16)을 삭제할 노드의 부모 노드(10)가 오른쪽에(기존 15자리) 가리키도록 한다 (정석)
+- 삭제할 노드(15)의 왼쪽 자식(13) 중, 가장 큰 값(14)을 삭제할 노드(15)의 부모 노드(10)가 오른쪽에(기존 15자리) 가리키도록 한다.
+
+기본 사용 가능 전략 중, 1번 전략을 사용하여 코드를 구현하기로 함
+
+- 경우의 수가 또다시 두가지 있음
+
+  - case 3-2-1: 삭제할 노드(15)가 부모 노드(10)의 오른쪽에 있고, 삭제할 노드의 오른쪽 자식(18) 중, 가장 작은 값을 가진 노드(16)의 자식 노드가 없을 때
+  - case 3-2-2: 삭제할 노드(15)가 부모 노드(10)의 오른쪽에 있고, 삭제할 노드의 오른쪽 자식(18) 중, 가장 작은 값을 가진 노드(16)의 오른쪽에 자식 노드(17)가 있을 때
+
+    - 가장 작은 값을 가진 노드의 자식 노드가 왼쪽(16의 왼쪽 자식)에 있을 경우는 없음
+    - 왼쪽 노드가 있다는 것은 해당 노드보다 더 작은 값을 가진 노드가 있다는 뜻이기 때문
+
+```py
+else:
+    self.change_node = self.current_node.right #(18)
+    self.change_node_parent = self.current_node.right #(18)
+    while self.change_node.left != None: #(18)의 왼쪽 자식이 있다면
+        self.change_node_parent = self.change_node
+        self.change_node = self.change_node.left
+    # while 반목문을 전부 순회한 경우
+    # change_node_parent 자리에는 18이
+    # change_node 자리에는 16이 설정된다
+
+    # 16의 오른쪽에 값이 있다면?
+    # 18의 왼쪽에 17을 연결한다 why? 16은 15(current_node)를 대체할 예정이므로
+    if self.change_node.right != None:
+        self.change_node_parent.left = self.change_node.right
+    # 16의 오른쪽에 값이 없다면?
+    # 18의 왼쪽 자녀의 값을 비워둔다
+    else:
+        self.change_node_parent.left = None
+    # change_node_parent와 change_node 자리의 구성이 완료된 상태
+    # current_node를 제거하고 change_node를 parent의 right에 붙인다
+    # change_node의 왼쪽에는 기존에 current_node가 가졌던 left를 붙이고
+    # change_node의 오른쪽에는 while문을 통해 변경한
+    # change_node_parent인 cureent_node.right를 붙인다
+    self.parent.right = self.change_node
+    self.change_node.left = self.current_node.left
+    self.change_node.right = self.current_node.right
+```
+
+#### 5.5.5 파이썬 전체 코드 구현
+
+<details>
+
+```py
+# 이진 탐색 트리 삭제 코드 구현과 분석
+
+# 1. 삭제할 Node 탐색
+# 이를 위해 삭제할 Node가 없는 경우 False를 리턴하고, 함수를 종료시킴
+
+# def delete(self, value)
+# 실제로 받는 인자(value), self는 클래스의 메서드임을 나타내기 위해 씀
+# 없으면 delete 할 필요가 없으므로 False 리턴
+
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+
+class NodeManagement:
+    def __init__(self, head):
+        self.head = head
+
+    def insert(self, value):
+        self.current_node = self.head
+        while True:
+            if value < self.current_node.value:
+                if self.current_node.left != None:
+                    self.current_node = self.current_node.left
+                else:
+                    self.current_node.left = Node(value)
+                    break
+            else:
+                if self.current_node.right != None:
+                    self.current_node = self.current_node.right
+                else:
+                    self.current_node.right = Node(value)
+                    break
+
+    def search(self, value):
+        self.current_node = self.head
+        while self.current_node:
+            if self.current_node.value == value:
+                print('find Value:', value)
+                return True
+            elif value < self.current_node.value:
+                print('go to left', self.current_node.value)
+                self.current_node = self.current_node.left
+            else:
+                print('go to right', self.current_node.value)
+                self.current_node = self.current_node.right
+        return False
+
+    def delete(self, value):
+        # 트리를 순회하면서 값을 찾았는지 확인
+        # 해당 값을 가지는 트리의 노드가 있을 경우, True로 변경
+        # self.current_node >>> 삭제할 노드
+        searched = False
+        self.current_node = self.head
+        self.parent = self.head
+        while self.current_node:
+            # 삭제할 노드와 입력한 value값과 같다면 searched를 true로 변경
+            if self.current_node == value:
+                searched = True
+                break
+            # 왼쪽으로 갈 경우
+            elif value < self.current_node.value:
+                self.parent = self.current_node
+                self.current_node = self.current_node.left
+            # 오른쪽으로 갈 경우 (value가 같거나 클 경우)
+            else:
+                self.parent = self.current_node
+                self.current_node = self.current_node.right
+        # while문을 다 통과했을 경우
+        # 1 searched가 true 이며
+        # 2 self.current_node >>> 삭제할 노드
+        # 3 self.parent >>> 삭제할 노드의 부모 노드
+
+        # 만약 searched가 false이면, 삭제하고자 입력한 노드가 트리안에 없는 것이다
+        # 따라서 False를 리턴한다
+
+        if searched == False:
+            return False
+
+        # 이후부터 Case (3가지)들을 분리해서 코드 작성
+        # 1. Leaf Node 삭제 (본인 삭제, 자식 노드가 없음)
+        # 2. Node 삭제 (child node가 1개 있을 경우)
+        # 3. Node 삭제 (child node가 2개 있을 경우)
+
+        # case 1: Leaf Node 삭제 (본인 삭제, 자식 노드가 없음)
+        # self.current_node가 삭제할 노드, self.parent는 삭제할 노드의 부모 노드
+        # 본인 노드를 기준으로 왼쪽과 오른쪽 자녀거 모두 없는 경우이다
+
+        if self.current_node.left == None and self.current_node.right == None:
+            # 삭제하려는 value가 부모 노드보다 작으면 왼쪽/ 크면 오른쪽이겠죠?
+            if value < self.parent.value:
+                self.parent.left = None
+            else:
+                self.parent.right = None
+            # 메모리 상에서도 삭제하기
+            del self.current_node
+
+        # case 2: Node 삭제 (child node가 1개 있을 경우)
+        # child가 1개인데, 왼쪽에 있을 수도 있고, 오른쪽에 있을 수도 있다
+
+        # 자식 노드가 본인 기준 왼쪽에 있을 때
+        if self.current_node.left != None and self.current_node.rigth == None:
+            if value < self.parent.value:
+                self.parent.left = self.current_node.left
+            else:
+                self.parent.right = self.current_node.right
+        # 자식 노드가 본인 기준 오른쪽에 있을 때
+        elif self.current_node.left == None and self.current_node.right != None:
+            if value < self.parent.value:
+                self.parent.left = self.current_node.right
+            else:
+                self.parent.right = self.current_node.right
+
+        # case 3:
+        if self.current_node.left != None and self.current_node.right != None:  # case3
+            if value < self.parent.value:  # case3-1
+                self.change_node = self.current_node.right
+                self.change_node_parent = self.current_node.right
+                while self.change_node.left != None:
+                    self.change_node_parent = self.change_node
+                    self.change_node = self.change_node.left
+                # 16을 기준으로 17이 존재하면 18의 왼쪽(left)에 17을 붙여야 한다
+                if self.change_node.right != None:
+                    self.change_node_parent.left = self.change_node.right
+                # self.change_node.right == None: 일 경우
+                else:
+                    self.change_node_parent.left = None
+                # while문 순회를 마친 뒤, 16을 current_node인 15 대신 삽입하려는 경우
+                # 31의 왼쪽에 16을 연결
+                self.parent.left = self.change_node
+                # 16의 오른쪽에 (15가 가지고 있던 자식 노드의 오른쪽)18을 연결
+                # 16의 왼쪽에 (15가 가지고 있던 자식 노드의 왼쪽) 13을 연결
+                self.change_node.right = self.current_node.right
+                self.change_node.left = self.change_node.left
+            else:
+                self.change_node = self.current_node.right  # (18)
+                self.change_node_parent = self.current_node.right  # (18)
+                while self.change_node.left != None:  # (18)의 왼쪽 자식이 있다면
+                    self.change_node_parent = self.change_node
+                    self.change_node = self.change_node.left
+                # while 반목문을 전부 순회한 경우
+                # change_node_parent 자리에는 18이
+                # change_node 자리에는 16이 설정된다
+
+                # 16의 오른쪽에 값이 있다면?
+                # 18의 왼쪽에 17을 연결한다 why? 16은 15(current_node)를 대체할 예정이므로
+                if self.change_node.right != None:
+                    self.change_node_parent.left = self.change_node.right
+                # 16의 오른쪽에 값이 없다면?
+                # 18의 왼쪽 자녀의 값을 비워둔다
+                else:
+                    self.change_node_parent.left = None
+                # change_node_parent와 change_node 자리의 구성이 완료된 상태
+                # current_node를 제거하고 change_node를 parent의 right에 붙인다
+                # change_node의 왼쪽에는 기존에 current_node가 가졌던 left를 붙이고
+                # change_node의 오른쪽에는 while문을 통해 변경한
+                # change_node_parent인 cureent_node.right를 붙인다
+                self.parent.right = self.change_node
+                self.change_node.left = self.current_node.left
+                self.change_node.right = self.current_node.right
+
+```
+
+</details>
+
+### 6. 이진 탐색 트리의 시간 복잡도와 단점
+
+#### 6.1. 시간 복잡도 (탐색시)
+
+- depth (트리의 높이) 를 h라고 표기한다면, O(h)
+- n개의 노드를 가진다면, $h = log_2{n} $ 에 가까우므로, 시간 복잡도는 $ O(log{n}) $
+
+  - 참고: 빅오 표기법에서 $log{n}$ 에서의 log의 밑은 10이 아니라, 2입니다.
+  - 한번 실행시마다, 50%의 실행할 수도 있는 명령을 제거한다는 의미. 즉 50%의 실행시간을 단축시킬 수 있다는 것을 의미함
+
+<img src="https://www.mathwarehouse.com/programming/images/binary-search-tree/binary-search-tree-sorted-array-animation.gif" />
+
+(출처: https://www.mathwarehouse.com/programming/gifs/binary-search-tree.php#binary-search-tree-insertion-node)
+
+#### 6.2. 이진 탐색 트리 단점
+
+- 평균 시간 복잡도는 $ O(log{n}) $ 이지만,
+
+  - 이는 트리가 균형잡혀 있을 때의 평균 시간복잡도이며,
+
+- 다음 예와 같이 구성되어 있을 경우, 최악의 경우는 링크드 리스트등과 동일한 성능을 보여줌 ( $O(n)$ )
+
+  <img src="https://www.fun-coding.org/00_Images/worstcase_bst.png" width="300" />
