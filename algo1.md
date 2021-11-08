@@ -670,3 +670,252 @@ qsort(data_list)
   - O($n^2$)
 
 <img src="https://www.fun-coding.org/00_Images/quicksortworks.jpg" />
+
+## 대표적인 정렬 4: 병합 정렬(merged sort)
+
+### 1. 병합 정렬(merged sort)
+
+- 분할 정복 (Divide and Conquer)의 대표적인 예
+- 하향식으로 문제를 잘게 쪼개 나가는 방식
+- 메모이제이션 기법을 사용하지 않는다. (DP, 동적 계획법에서 사용)
+- 리스트를 절반으로 자른다 (원하는 value를 찾을 때까지)
+- 이후 각 부분 리스트를 재귀적으로 합병 정렬을 이용하여 정렬한다
+- 결과값으로 정렬된 데이터를 반환한다
+
+### 직접 눈으로 보면 더 이해가 쉽다: https://visualgo.net/en/sorting
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Merge-sort-example-300px.gif" width=500/>
+
+출처: [위키피디아](https://ko.wikipedia.org/wiki/%ED%95%A9%EB%B3%91_%EC%A0%95%EB%A0%AC)
+
+```
+① [6, 5, 3, 1, 8, 7, 2, 4]
+
+② [6, 5, 3, 1] [8, 7, 2, 4]
+
+③ [6,5] [3,1] [8,7] [2,4]
+
+④ [6][5] [3][1] [8][7] [2][4]
+
+⑤ [5,6] [1,3] [7,8] [2,4]
+
+⑥ [1, 3, 5, 6] [2, 4, 7, 8]
+
+⑦ [1, 2, 3, 4, 5, 6, 7, 8]
+```
+
+### ① - ② - ③ - ④ : split
+
+- 배열을 분리하는 함수를 정의
+- 배열의 길이를 기준으로 더이상 나눌 수 없을 때까지 나눈다
+
+### ⑤ - ⑥ - ⑦ : merge
+
+- 분리된 배열을 병합하는 함수
+- 최소 길이의 조건이 충족됐을 때 두 배열을 비교하여 더 작은 수부터 차례로 배열에 담는다
+
+### 2. 기본 구조 만들기
+
+어떤 데이터가 있을 때 리스트를 앞 뒤로 짜르는 코드를 작성해보기
+
+```py
+data2 = list()
+
+for idx in range(10):
+    data2.append(idx+1)
+
+length = int(len(data2)/2)
+print(data2[:length])
+print(data2[length:])
+
+>>>
+[1,2,3,4,5]
+[6,7,8,9,10]
+```
+
+**따라서 기본 구조는 다음과 같다**
+
+```py
+def split_func(data):
+    medium = int(len(data) / 2)
+    left = data[:medium] # medium 전까지
+    right = data[medium:] # medium부터 끝까지
+    return left, right
+```
+
+### split 함수 만들기
+
+- 주어진 조건에 충족할 때까지 재귀함수를 바탕으로 반복한다
+
+```py
+def mergesplit(data):
+    if len(data) <= 1:
+        return data
+
+    medium = int(len(data) / 2)
+    left = mergesplit(data[:medium])
+    right = mergesplit(data[medium:])
+    return merge(left, right)
+```
+
+### merge 함수 만들기
+
+```py
+def merge(left, right):
+    merged = list()
+    left_point, right_point = 0, 0
+
+    # case1 - left/right 둘다 있을때
+    while len(left) > left_point and len(right) > right_point:
+        if left[left_point] > right[right_point]:
+            merged.append(right[right_point])
+            right_point += 1
+        else:
+            merged.append(left[left_point])
+            left_point += 1
+
+    # case2 - left 데이터가 없을 때
+    while len(left) > left_point:
+        merged.append(left[left_point])
+        left_point += 1
+
+    # case3 - right 데이터가 없을 때
+    while len(right) > right_point:
+        merged.append(right[right_point])
+        right_point += 1
+
+    return merged
+```
+
+### 최종 코드
+
+```py
+def merge(left, right):
+    merged = list()
+    left_point, right_point = 0, 0
+
+    # case1 - left/right 둘다 있을때
+    while len(left) > left_point and len(right) > right_point:
+        if left[left_point] > right[right_point]:
+            merged.append(right[right_point])
+            right_point += 1
+        else:
+            merged.append(left[left_point])
+            left_point += 1
+
+    # case2 - left 데이터가 없을 때
+    while len(left) > left_point:
+        merged.append(left[left_point])
+        left_point += 1
+
+    # case3 - right 데이터가 없을 때
+    while len(right) > right_point:
+        merged.append(right[right_point])
+        right_point += 1
+
+    return merged
+
+
+def mergesplit(data):
+    if len(data) <= 1:
+        return data
+    medium = int(len(data) / 2)
+    left = mergesplit(data[:medium])
+    right = mergesplit(data[medium:])
+    return merge(left, right)
+
+
+data_list = [34, 10, 2, 5, 1, 3, 35, 36, 46, 75, 85]
+
+
+print(mergesplit(data_list))
+```
+
+## 탐색 알고리즘 1: 순차 탐색 (Sequential Search)
+
+### 순차 탐색(Sequential Search)이란?
+
+- 탐색은 여러 데이터 중에서 원하는 데이터를 찾아내는 것을 의미
+- 데이터가 담겨있는 리스트를 앞에서부터 하나씩 비교해서 원하는 데이터를 찾는 방법
+- 결과값이 존재할 경우 해당 인덱스, 존재하지 않을 경우 -1을 반환한다
+
+### 코드 만들기
+
+```py
+# 순차 탐색
+# list.prototype.indexOf() 메서드와 동일한 기능
+# 직접 만들어 본다고 생각하면 편할듯
+# 있을 경우 해당 인덱스를 반환
+# 없을 경우 -1 반환
+
+def indexOf(data, search):
+    for index in range(len(data)):
+        if search == data[index]:
+            return index
+    return -1
+
+
+li = [10, 3, 5, 1, 14, 11, 6]
+
+print(indexOf(li, 3))
+print(indexOf(li, 7))
+```
+
+## 탐색 알고리즘2: 이진 탐색 (Binary Search)
+
+### 1. 이진 탐색 (Binary Search)이란?
+
+- 탐색할 자료를 두로 나누어 해당 데이터가 있을만한 곳을 탐색하는 방법
+- 정렬이 이미 되어있는 데이터를 탐색할 때 유용하다
+- 이진(2개의 방향)으로 탐색한다
+- 가운데 (= int(len(data)/2) )를 기준으로 왼쪽과 오른쪽으로 탐색한다
+- 결과 값을 True 또는 False로 반환한다
+
+### 다음 문제를 먼저 생각해보자
+
+<img src="https://www.fun-coding.org/00_Images/binarysearch.png" />
+
+### 이진 탐색의 이해 (순차 탐색과 비교하며 이해하기)
+
+<img src="https://www.mathwarehouse.com/programming/images/binary-vs-linear-search/binary-and-linear-search-animations.gif">
+
+- [저작자] by penjee.com [이미지 출처](https://blog.penjee.com/binary-vs-linear-search-animated-gifs)
+
+### 2. 분할 정복 (Divide and Conquer)과 이진 탐색(Binary Search)
+
+### 분할 정복 알고리즘
+
+- 재귀 용법을 통해 주어진 데이터를 처리한다
+- Divide: 문제를 하나 또는 둘 이상으로 나눈다
+- Conquer: 나눠진 문제가 충분히 작고, 해결이 가능하다면 해결하고, 그렇지 않다면 다시 나눈다
+
+### 이진 탐색
+
+- Divide: 리스트를 두 개의 서브 리스트로 나눈다
+- Conquer:
+  - 검색할 숫자(search) > 중간값이면, 뒷 부분의 서브 리스트에서 검색할 숫자를 찾는다
+  - 검색할 숫자(search) < 중간값이면, 앞 부분의 서브 리스트에서 검색할 숫자를 찾는다
+
+### 구현하기
+
+```py
+def binary_search(data, search):
+    # 검색을 해서 최종 길이가 1인데, 내가 원하는 데이터일 경우
+    if len(data) == 1 and search == data[0]:
+        return True
+    # 검색을 해서 최종 길이가 1인데, 내가 원하는 데이터가 아닐 경우
+    if len(data) == 1 and search != data[0]:
+        return False
+    # 데이터의 최종 길익가 0일 경우 (사실 없으나, 방어코드 개념)
+    if len(data) ==0:
+        return False
+
+    medium = int(len(data)//2)
+    if search == data[medium]:
+        return True
+    else:
+        if search > data[medium]:
+            return binary_search(data[medium:], search)
+        else:
+            return binary_search(data[:medium], search)
+```
