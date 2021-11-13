@@ -1,27 +1,20 @@
-def gcdString(A: str, B: str):
-    # A가 더 클 경우
-    # A를 기준으로 B를 순회하여 해당하는 값이 있는지 체크
-    if len(A) > len(B):
-        for index in range(len(A)):
-            for index in range(len(B)):
-                if A[index] == B[index]:
-                    print(index, A[index], B[index])
-                else:
-                    break
-            else:
-                return ''
-    # B가 더 클 경우
-    # B를 기준으로 A를 순회하여 해당하는 값이 있는지 체크
+def gcd(str1: str, str2: str):
+
+    if(len(str1) < len(str2)):
+        return gcd(str2, str1)
+
+    elif(not str1.startswith(str2)):
+        return ""
+
+    elif(len(str2) == 0):
+        return str1
+
     else:
-        for index in range(len(B)):
-            for index in range(len(A)):
-                if A[index] == B[index]:
-                    print(index, A[index], B[index])
-                else:
-                    break
-            else:
-                return ''
-    print()
+        return gcd(str1[len(str2):], str2)
 
 
-gcdString('str', 'st')
+print(gcd('campus', 'gfg'))
+
+print('immsi')
+print('immsi')
+ss
