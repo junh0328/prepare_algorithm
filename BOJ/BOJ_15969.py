@@ -1,4 +1,4 @@
-# 제목: 행복
+# 문제 제목: 행복
 # 문제유형: list, min, max 사용하기
 # https://www.acmicpc.net/problem/15969
 

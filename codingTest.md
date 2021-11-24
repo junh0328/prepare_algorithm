@@ -268,3 +268,16 @@ print('st:', st)
 def isCheck(list):
   return len(list) == len(set(list))
 ```
+
+# 매개변수의 이해와 구조화
+
+## Container의 역할
+
+- 자료형에 따른 본인만의 container 설정과 이해
+
+  - Tuple: 위치(index)에 따른 의미
+  - Set: 포함 여부의 의미
+  - List: index와 원소의 관계
+  - Dict: key와 value의 관계
+
+- 함수와 마찬가지로 적절한 명명 필요

@@ -1,3 +1,5 @@
+# 문제 제목: 1920
+
 N, A = int(input()), {i: 1 for i in map(int, input().split())}
 
 M = int(input())
@@ -9,3 +11,8 @@ print('')
 
 for i in list(map(int, input().split())):
     print(A.get(i, 0))
+
+# 5
+# 4 1 5 2 3
+# 5
+# 1 3 7 9 5
