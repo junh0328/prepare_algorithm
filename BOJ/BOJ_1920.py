@@ -1,4 +1,6 @@
-# 문제 제목: 1920
+# 문제 제목: 수 찾기
+
+# https://www.acmicpc.net/problem/1920
 
 N, A = int(input()), {i: 1 for i in map(int, input().split())}
 
