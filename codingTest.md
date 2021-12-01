@@ -281,3 +281,120 @@ def isCheck(list):
   - Dict: key와 value의 관계
 
 - 함수와 마찬가지로 적절한 명명 필요
+
+# 예외처리
+
+## 1. 논리 연산자/ 비트 연산자 활용하기
+
+```py
+a,b = 10, 20
+
+# case 1:
+
+if a > b:
+  if a % 10 == 0:
+    print(a)
+
+# case 2: 논리 연산자 (and or not) 사용하기
+if a > b and a % 10 == 0:
+  print(a)
+```
+
+```py
+1 << 2
+1 & 1
+1 | 1
+1 ^ 1
+```
+
+## 2. 상태를 나타내는 자료 활용하기
+
+```py
+N = 71
+
+# check 변수
+ck = False
+
+for i in range(2, N):
+  if N % i == 0:
+    print("Not Prime")
+    ck = True
+    break
+
+if not ck:
+  print("Prime")
+```
+
+## 3. 나눠서 진행하기
+
+```py
+# case 1 : 나누지 않을 경우
+N = 71
+
+ck = False
+
+for N in range(10, 100):
+  for i in range(2, N):
+    if N % i == 0:
+      print("Not Prime")
+      ck = True
+      break
+
+  if not ck:
+    print("Prime")
+```
+
+```py
+# case 2 : 나눌 경우
+
+def isPrime(N):
+  for i in range(2, N):
+    if N % i == 0:
+      return False
+    return True
+
+for N in range(10, 100):
+  if isPrime(N):
+    print(N,"is Prime")
+  else:
+    print("Not Prime)
+```
+
+## 4. 여러 자료구조와 메서드, 함수 활용하기
+
+```py
+# case 1 : 일반적인 팰린드롬 확인하기
+
+S = "hello"
+
+for idx in S:
+  if S[idx] != s[len(S)-idx-1]:
+    print("Not Palindrome")
+```
+
+```py
+# case 2 : 파이썬 리스트 슬라이싱 사용하기
+S = "hello"
+
+if S == S[::-1]:
+  print("is Palindrome")
+```
+
+```py
+def isUnique(lst):
+  return len(lst) == len(set(lst))
+```
+
+## 5. 미리 처리한 케이스와 처리할 케이스 정리하기
+
+```py
+# 1. 예제 케이스
+
+# 2. 조건 A처리
+
+# 3. 조건 B처리
+
+# 4. 조건 AB처리
+```
+
+## 6. 예제, 최소, 최대, 예외, 랜덤 케이스 만들기

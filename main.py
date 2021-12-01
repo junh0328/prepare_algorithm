@@ -1,11 +1,34 @@
-N, A = int(input()), {i: 1 for i in map(int, input().split())}
+S = input()
 
-M = int(input())
+# 등호를 나타날 때
+tmp, answer, check = "", "", False
 
-print('A:', A)
-# >>> A: {4: 1, 1: 1, 5: 1, 2: 1, 3: 1}
+for i in S:
+    # case 1: 공백
+    if i == ' ':
+        # 등호가 닫혀있을 경우
+        if not check:
+            answer += tmp[::-1] + " "
+            tmp = ""
+        # 등호가 열려있을 경우
+        else:
+            answer += " "
 
-print('')
+    # case 2: 등호
+    elif i == '<':
+        check = True
+        answer += tmp[::-1] + "<"
+        tmp = ""
+    elif i == '>':
+        check = False
+        answer += ">"
 
-for i in list(map(int, input().split())):
-    print(A.get(i, 0))
+    # 알파벳 또는 숫자
+    else:
+        if check:
+            answer += i
+        else:
+            tmp += i
+
+answer += tmp[::-1]
+print(answer)
