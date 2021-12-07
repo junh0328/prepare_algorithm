@@ -1,2 +1,9 @@
-5
-1
+N,K: 17 , 4
+target, cnt: 16 , 1
+
+N,K: 4 , 4
+target, cnt: 4 , 2
+
+N,K: 1 , 4
+target, cnt: 0 , 4
+3

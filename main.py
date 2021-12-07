@@ -1,44 +1,19 @@
-import sys
-sys.setrecursionlimit(10000)
+N, K = map(int, input().split())
 
-T = int(input())
-B, ck = [], []
+cnt = 0
 
-dx, dy = [1, 0, -1, 0], [0, 1, 0, -1]
+while True:
+  print('N,K:', N,',',K)
+  target = (N // K) * K
+  cnt += (N - target)
+  print('target, cnt:', target, ',',cnt)
 
-
-def dfs(x, y):
-    global B, ck
-    if ck[x][y] == 1:
-        return
-    ck[x][y] = 1
-    for i in range(4):
-        xx, yy = x + dx[i], y + dy[i]
-        if B[xx][yy] == 0 or ck[xx][yy] == 1:
-            continue
-        dfs(xx, yy)
-
-
-def process():
-    global B, ck
-    M, N, K = map(int, input().split())
-    B = [[0 for i in range(50+2)] for _ in range(50+2)]
-    ck = [[0 for i in range(50+2)] for _ in range(50+2)]
-    for _ in range(K):
-        X, Y = map(int, input().split())
-        B[Y+1][X+1] = 1
-    ans = 0
-    # DFS 활용
-    for i in range(1, N+1):
-        for j in range(1, M+1):
-            if B[i][j] == 0 or ck[i][j] == 1:
-                continue
-            dfs(i, j)
-            ans += 1
-    print(ans)
-
-
-for _ in range(T):
-    process()
-
-# for _ in range() ... 에서 언더바(_)를 쓰는 경우 >>> 안 쓸 변수이기 때문에 굳이 'i'로 나타낼 필요가 없는 경우에 사용
+  N = target
+  if N < K:
+    break
+  cnt += 1
+  N //= K
+  print()
+  
+cnt += (N-1)
+print(cnt)
