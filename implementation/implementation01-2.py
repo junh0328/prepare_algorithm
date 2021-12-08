@@ -7,6 +7,7 @@ n = int(input())
 x, y = 1, 1
 plans = input().split()
 
+
 # L, R, U, D에 따른 이동 방향
 
 dx = [0,0,-1,1]
@@ -27,3 +28,8 @@ for plan in plans:
   x, y = nx, ny
 
 print(x,y)
+
+# 5
+# R R U D D
+
+# >>> plans = R R U D D
